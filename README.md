@@ -1,4 +1,4 @@
-**** Before working delete all the readme files under src folders ****
+## **** Before working delete all the readme files under src folders **** ##
 
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
