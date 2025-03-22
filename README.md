@@ -15,7 +15,7 @@ Follow these steps to install and run the project:
 
 1. Clone the repository (only this branch):
    ```sh
-   git clone --single-branch --branch main https://github.com/yourusername/fortura.git
+   git clone --single-branch --branch main https://github.com/pratyush090506/fortura_ver1.git
    cd fortura
    ```
 
