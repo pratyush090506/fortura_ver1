@@ -18,8 +18,8 @@ Follow these steps to install and run the project:
 
 1. **Clone a specific branch of the repository:**
    ```sh
-   git clone --single-branch --branch RNCfortura https://github.com/pratyush090506/fortura_ver1.git
-   cd fortura
+   git clone --single-branch --branch RNCfortura https://github.com/pratyush090506/fortura_ver1.git Newfortura
+   cd Newfortura
    ```
 
 2. **Install dependencies:**
