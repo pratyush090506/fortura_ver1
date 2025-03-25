@@ -3,13 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import OverviewScreen from '../screens/overviewPage/OverviewScreen';
 import PayScreen from '../screens/pay/PayScreen';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import OverviewScreen from '../screens/overviewPage/OverviewScreen';
 import LoginScreen from '../screens/loginPage/LoginScreen'; 
 import BudgetScreen from '../screens/budgetPage/BudgetScreen';
-import PayScreen from '../screens/payPage/PayScreen';
 import InsightsScreen from '../screens/insightsPage/InsightsScreen';
 import ProfileScreen from '../screens/profilePage/ProfileScreen';
 import { useThemeColor } from '../hooks/useThemeColor';
