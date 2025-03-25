@@ -1,6 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import OverviewScreen from '../screens/overviewPage/OverviewScreen';
+import PayScreen from '../screens/pay/PayScreen';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import OverviewScreen from '../screens/overviewPage/OverviewScreen';
@@ -12,6 +15,12 @@ import ProfileScreen from '../screens/profilePage/ProfileScreen';
 import { useThemeColor } from '../hooks/useThemeColor';
 
 const Stack = createStackNavigator();
+
+<Stack.Navigator>
+  <Stack.Screen name="Overview" component={OverviewScreen} />
+  <Stack.Screen name="Pay" component={PayScreen} />
+</Stack.Navigator>
+
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
