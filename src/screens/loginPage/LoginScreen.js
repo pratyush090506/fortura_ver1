@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { useThemeColor } from '../hooks/useThemeColor';
+import { useThemeColor } from '../../hooks/useThemeColor';
 import { handleMobileLogin, handleGoogleSignIn } from '../../auth/firebaseAuth';
 
 

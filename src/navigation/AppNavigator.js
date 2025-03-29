@@ -4,7 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import OverviewScreen from '../screens/overviewPage/OverviewScreen';
 import PayScreen from '../screens/pay/PayScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import LoginScreen from '../screens/loginPage/LoginScreen'; 
 import BudgetScreen from '../screens/budgetPage/BudgetScreen';
 import InsightsScreen from '../screens/insightsPage/InsightsScreen';
@@ -90,8 +91,8 @@ function TabNavigator() {
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="Main">
+        {/* <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} /> */}
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>

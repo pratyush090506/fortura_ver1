@@ -61,9 +61,9 @@ const ProfileScreen = ({ navigation }) => {
             }}
             style={styles.avatar}
           />
-          <Text style={[styles.name, { color: 'black' }]}>Kartikey</Text>
+          <Text style={[styles.name, { color: 'black' }]}>test</Text>
           <Text style={[styles.email, { color: 'rgba(0, 0, 0, 0.7)' }]}>
-            kartikey.iAmTheTeamLead.hotmail.com
+            test@fortura.com
           </Text>
         </View>
 
