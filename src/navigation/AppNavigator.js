@@ -10,6 +10,7 @@ import LoginScreen from '../screens/loginPage/LoginScreen';
 import BudgetScreen from '../screens/budgetPage/BudgetScreen';
 import InsightsScreen from '../screens/insightsPage/InsightsScreen';
 import ProfileScreen from '../screens/profilePage/ProfileScreen';
+import EditProfileScreen from '../screens/profilePage/EditProfileScreen';
 import { useThemeColor } from '../hooks/useThemeColor';
 
 const Stack = createStackNavigator();
@@ -92,8 +93,19 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
-        {/* <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} /> */}
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
+        <Stack.Screen 
+          name="EditProfile" 
+          component={EditProfileScreen} 
+          options={{ 
+            title: 'Edit Profile',
+            headerStyle: {
+              backgroundColor: '#000',
+            },
+            headerTintColor: '#fff',
+          }} 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
