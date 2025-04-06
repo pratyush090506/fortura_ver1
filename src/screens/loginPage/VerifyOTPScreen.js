@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import { getConfirmation } from '../../auth/confirmationStore';
 
 export default function VerifyOTPScreen({ route, navigation }) {
-  const { phoneNumber, confirmation } = route.params;  // Get the confirmation object
+  const { phoneNumber } = route.params;
+  const confirmation = getConfirmation(); // ✅ retrieve it
   const [otp, setOtp] = useState('');
 
   const handleVerifyOTP = async () => {
@@ -13,14 +15,14 @@ export default function VerifyOTPScreen({ route, navigation }) {
     }
 
     try {
-      // Verify OTP using the confirmation object
       await confirmation.confirm(otp);
       Alert.alert('Success', 'You have successfully logged in!');
-      navigation.navigate('ProfileScreen');  // Navigate to the Profile screen
+      navigation.navigate('ProfileScreen');
     } catch (error) {
       Alert.alert('Error', 'Invalid OTP. Please try again.');
     }
   };
+
 
   return (
     <View style={styles.container}>

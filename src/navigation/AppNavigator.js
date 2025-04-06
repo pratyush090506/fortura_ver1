@@ -11,6 +11,7 @@ import BudgetScreen from '../screens/budgetPage/BudgetScreen';
 import InsightsScreen from '../screens/insightsPage/InsightsScreen';
 import ProfileScreen from '../screens/profilePage/ProfileScreen';
 import { useThemeColor } from '../hooks/useThemeColor';
+import VerifyOTPScreen from '../screens/loginPage/VerifyOTPScreen'; 
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -88,8 +89,10 @@ export default function AppNavigator() {
       <Stack.Navigator initialRouteName="Login">
         {/* Login Screen */}
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-
+        
+        <Stack.Screen name="VerifyOTPScreen" component={VerifyOTPScreen} options={{ headerShown: false }} />
         {/* Main App after Login */}
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { handleGoogleSignIn } from '../../auth/firebaseAuth';
+import {VerifyOTPScreen} from '../../screens/loginPage/VerifyOTPScreen'
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { setConfirmation } from '../../auth/confirmationStore';
 
 export default function LoginScreen({ navigation }) {
   const { primary, text } = useThemeColor();
@@ -11,23 +13,27 @@ export default function LoginScreen({ navigation }) {
   const [isMobileLogin, setIsMobileLogin] = useState(true);
 
   const onMobileLogin = async () => {
-    if (phoneNumber.length === 0 || phoneNumber.length < 10) {
-      Alert.alert('Error', 'Please enter a valid phone number.');
+    let cleanedNumber = phoneNumber.replace(/\D/g, '');
+  
+    if (cleanedNumber.length < 10) {
+      Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
       return;
     }
-
+  
+    if (cleanedNumber.startsWith('0')) {
+      cleanedNumber = cleanedNumber.substring(1);
+    }
+  
+    const formattedNumber = `+91${cleanedNumber}`;
+  
     try {
-      // Send OTP using signInWithPhoneNumber
-      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-      
-      // Pass the confirmation object to the next screen where the OTP will be verified
-      Alert.alert('OTP Sent', `An OTP has been sent to ${phoneNumber}.`);
-      
-      // Navigate to the OTP verification screen and pass the phone number and confirmation object
-      navigation.navigate('VerifyOTPScreen', { phoneNumber, confirmation });
+      const confirmation = await auth().signInWithPhoneNumber(formattedNumber);
+      setConfirmation(confirmation); // ✅ store globally
+      Alert.alert('OTP Sent', `An OTP has been sent to ${formattedNumber}.`);
+      navigation.navigate('VerifyOTPScreen', { phoneNumber: formattedNumber }); // ⛔ don't pass confirmation
     } catch (error) {
       console.error("Error during OTP request:", error);
-      Alert.alert('Error', error.message);  // Display error message if OTP request fails
+      Alert.alert('Error', error.message);
     }
   };
 

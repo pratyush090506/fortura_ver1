@@ -7,17 +7,17 @@
     "client": [
       {
         "client_info": {
-          "mobilesdk_app_id": "1:674823172285:android:ce9942680ae049c0ae87d4",
+          "mobilesdk_app_id": "1:674823172285:android:339b130d01d7cdc3ae87d4",
           "android_client_info": {
-            "package_name": "com.company.fortura_ver0"
+            "package_name": "com.forturanew"
           }
         },
         "oauth_client": [
           {
-            "client_id": "674823172285-gl14fou2isubr5vhpq90bfqp8fjicen5.apps.googleusercontent.com",
+            "client_id": "674823172285-rdua8pcrasea8rj493f0ruhumps8gukp.apps.googleusercontent.com",
             "client_type": 1,
             "android_info": {
-              "package_name": "com.company.fortura_ver0",
+              "package_name": "com.forturanew",
               "certificate_hash": "ad6b57f23e432c38a297aa1c6798e77cbf0132c0"
             }
           },

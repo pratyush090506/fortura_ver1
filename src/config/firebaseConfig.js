@@ -2,13 +2,13 @@ import { initializeApp } from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCksMMJqtN9oEUcFFhIRoQt4wzSre6fqtk',
-  authDomain: 'fortura-57119.firebaseapp.com',
-  projectId: 'fortura-57119',
-  storageBucket: 'fortura-57119.appspot.com',
-  messagingSenderId: '674823172285',
-  appId: '1:674823172285:web:531217d5ecbf9e06ae87d4',
-  measurementId: 'G-975JMGF5Z3',
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
