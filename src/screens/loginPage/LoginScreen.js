@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { useThemeColor } from '../hooks/useThemeColor';
-import { handleMobileLogin, handleGoogleSignIn } from '../../auth/firebaseAuth';
-
+import { useThemeColor } from '../../hooks/useThemeColor';
+import { handleGoogleSignIn } from '../../auth/firebaseAuth';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export default function LoginScreen({ navigation }) {
   const { primary, text } = useThemeColor();
@@ -10,22 +11,42 @@ export default function LoginScreen({ navigation }) {
   const [isMobileLogin, setIsMobileLogin] = useState(true);
 
   const onMobileLogin = async () => {
-    const appVerifier = window.recaptchaVerifier; // reCAPTCA set krna parega
+    if (phoneNumber.length === 0 || phoneNumber.length < 10) {
+      Alert.alert('Error', 'Please enter a valid phone number.');
+      return;
+    }
 
     try {
-      await handleMobileLogin(phoneNumber, appVerifier);
+      // Send OTP using signInWithPhoneNumber
+      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+      
+      // Pass the confirmation object to the next screen where the OTP will be verified
       Alert.alert('OTP Sent', `An OTP has been sent to ${phoneNumber}.`);
-      navigation.navigate('VerifyOTPScreen', { phoneNumber });
+      
+      // Navigate to the OTP verification screen and pass the phone number and confirmation object
+      navigation.navigate('VerifyOTPScreen', { phoneNumber, confirmation });
     } catch (error) {
-      Alert.alert('Error', error.message);
+      console.error("Error during OTP request:", error);
+      Alert.alert('Error', error.message);  // Display error message if OTP request fails
     }
   };
 
   const onGoogleSignIn = async () => {
     try {
-      await handleGoogleSignIn();
+      // Ensure the device has Play Services (for Android) or the correct configuration (for iOS)
+      await GoogleSignin.hasPlayServices();
+
+      // Start the Google Sign-In process
+      const { idToken } = await GoogleSignin.signIn();
+
+      // Create a Firebase credential with the Google ID token
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      // Sign in with the credential from the Google user
+      await auth().signInWithCredential(googleCredential);
+
       Alert.alert('Login Successful', 'You have logged in with Google.');
-      navigation.navigate('Profile');
+      navigation.navigate('Profile'); // Navigate to Profile or home screen
     } catch (error) {
       Alert.alert('Error', error.message);
     }

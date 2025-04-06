@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, signInWithCredential, signInWithPhoneNumber } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { auth } from '../config/firebaseConfig';
 
 export const handleMobileLogin = async (phoneNumber, appVerifier) => {
     const phoneNumberString = `+91${phoneNumber}`;

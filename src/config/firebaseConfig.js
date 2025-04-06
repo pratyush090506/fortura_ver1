@@ -1,19 +1,16 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
 
-// actual Firebase configuration se replace krna parega
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: 'AIzaSyCksMMJqtN9oEUcFFhIRoQt4wzSre6fqtk',
+  authDomain: 'fortura-57119.firebaseapp.com',
+  projectId: 'fortura-57119',
+  storageBucket: 'fortura-57119.appspot.com',
+  messagingSenderId: '674823172285',
+  appId: '1:674823172285:web:531217d5ecbf9e06ae87d4',
+  measurementId: 'G-975JMGF5Z3',
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
 
-export { auth, db };
+export { auth };

@@ -1,23 +1,18 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import LoginScreen from '../screens/loginPage/LoginScreen';
 import OverviewScreen from '../screens/overviewPage/OverviewScreen';
 import PayScreen from '../screens/pay/PayScreen';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import LoginScreen from '../screens/loginPage/LoginScreen'; 
 import BudgetScreen from '../screens/budgetPage/BudgetScreen';
 import InsightsScreen from '../screens/insightsPage/InsightsScreen';
 import ProfileScreen from '../screens/profilePage/ProfileScreen';
 import { useThemeColor } from '../hooks/useThemeColor';
 
 const Stack = createStackNavigator();
-
-<Stack.Navigator>
-  <Stack.Screen name="Overview" component={OverviewScreen} />
-  <Stack.Screen name="Pay" component={PayScreen} />
-</Stack.Navigator>
-
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
@@ -91,7 +86,10 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
+        {/* Login Screen */}
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+
+        {/* Main App after Login */}
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
