@@ -1,8 +1,7 @@
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native';
 import { Card } from '../../components/Card';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { ProgressChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
 
 export default function BudgetScreen() {
   const { text, background, primary, warning, error } = useThemeColor();
@@ -44,10 +43,14 @@ export default function BudgetScreen() {
         <Card>
           <ProgressChart
             data={budgetProgress}
-            width={screenWidth - 48}
+            width={screenWidth}
             height={220}
             strokeWidth={16}
             radius={32}
+            style={{
+              alignSelf: 'center',
+              transform: [{scale:0.89}],
+            }}
             chartConfig={{
               backgroundColor: '#ffffff',
               backgroundGradientFrom: '#ffffff',
