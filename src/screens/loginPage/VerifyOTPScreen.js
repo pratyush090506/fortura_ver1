@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { useThemeColor } from '../../hooks/useThemeColor';
+import auth from '@react-native-firebase/auth';
+import { getConfirmation } from '../../auth/confirmationStore';
 
 export default function VerifyOTPScreen({ route, navigation }) {
-  const { primary, text } = useThemeColor();
   const { phoneNumber } = route.params;
+  const confirmation = getConfirmation(); // ✅ retrieve it
   const [otp, setOtp] = useState('');
 
-  const handleVerifyOTP = () => {
-    if (otp) {
-      Alert.alert('Success', 'You have successfully logged in!');
-      navigation.navigate('ProfileScreen'); 
-    } else {
+  const handleVerifyOTP = async () => {
+    if (otp.length < 6) {
       Alert.alert('Error', 'Please enter a valid OTP.');
+      return;
+    }
+
+    try {
+      await confirmation.confirm(otp);
+      Alert.alert('Success', 'You have successfully logged in!');
+      navigation.replace('Main');
+    } catch (error) {
+      Alert.alert('Error', 'Invalid OTP. Please try again.');
     }
   };
+
 
   return (
     <View style={styles.container}>
@@ -24,6 +32,7 @@ export default function VerifyOTPScreen({ route, navigation }) {
         style={styles.input}
         placeholder="Enter OTP"
         keyboardType="number-pad"
+        maxLength={6}
         value={otp}
         onChangeText={setOtp}
       />
@@ -59,12 +68,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: primary,
+    backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 5,
   },
   buttonText: {
-    color: text,
+    color: '#fff',
     textAlign: 'center',
     fontWeight: 'bold',
   },

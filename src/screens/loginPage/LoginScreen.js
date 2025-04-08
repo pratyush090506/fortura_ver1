@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useThemeColor } from '../../hooks/useThemeColor';
-import { handleMobileLogin, handleGoogleSignIn } from '../../auth/firebaseAuth';
-
+import { handleGoogleSignIn } from '../../auth/firebaseAuth';
+import {VerifyOTPScreen} from '../../screens/loginPage/VerifyOTPScreen';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { setConfirmation } from '../../auth/confirmationStore';
 
 export default function LoginScreen({ navigation }) {
   const { primary, text } = useThemeColor();
@@ -10,32 +13,37 @@ export default function LoginScreen({ navigation }) {
   const [isMobileLogin, setIsMobileLogin] = useState(true);
 
   const onMobileLogin = async () => {
-    const appVerifier = window.recaptchaVerifier; // reCAPTCA set krna parega
-
+    let cleanedNumber = phoneNumber.replace(/\D/g, '');
+  
+    if (cleanedNumber.length < 10) {
+      Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
+      return;
+    }
+  
+    if (cleanedNumber.startsWith('0')) {
+      cleanedNumber = cleanedNumber.substring(1);
+    }
+  
+    const formattedNumber = `+91${cleanedNumber}`;
+  
     try {
-      await handleMobileLogin(phoneNumber, appVerifier);
-      Alert.alert('OTP Sent', `An OTP has been sent to ${phoneNumber}.`);
-      navigation.navigate('VerifyOTPScreen', { phoneNumber });
+      const confirmation = await auth().signInWithPhoneNumber(formattedNumber);
+      setConfirmation(confirmation); // ✅ store globally
+      Alert.alert('OTP Sent', `An OTP has been sent to ${formattedNumber}.`);
+      navigation.navigate('VerifyOTPScreen', { phoneNumber: formattedNumber }); // ⛔ don't pass confirmation
     } catch (error) {
+      console.error("Error during OTP request:", error);
       Alert.alert('Error', error.message);
     }
   };
 
-  const onGoogleSignIn = async () => {
-    try {
-      await handleGoogleSignIn();
-      Alert.alert('Login Successful', 'You have logged in with Google.');
-      navigation.navigate('Profile');
-    } catch (error) {
-      Alert.alert('Error', error.message);
-    }
-  };
+  
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
-      {isMobileLogin ? (
+      isMobileLogin ? (
         <>
           <TextInput
             style={styles.input}
@@ -49,17 +57,11 @@ export default function LoginScreen({ navigation }) {
             <Text style={[styles.buttonText, { color: text }]}>Request OTP</Text>
           </TouchableOpacity>
         </>
-      ) : (
-        <>
-          <TouchableOpacity style={[styles.button, { backgroundColor: '#DB4437' }]} onPress={onGoogleSignIn}>
-            <Text style={[styles.buttonText, { color: 'white' }]}>Login with Google</Text>
-          </TouchableOpacity>
-        </>
-      )}
+      )
 
       <TouchableOpacity style={styles.toggleButton} onPress={() => setIsMobileLogin(!isMobileLogin)}>
         <Text style={styles.toggleText}>
-          {isMobileLogin ? 'Login with Google' : 'Login with Mobile Number'}
+          {isMobileLogin}
         </Text>
       </TouchableOpacity>
     </View>
