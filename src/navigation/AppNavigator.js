@@ -88,11 +88,9 @@ function TabNavigator() {
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="VerifyOTPScreen" component={VerifyOTPScreen} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="Main">
+        {/* <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} /> */}
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
-        <Stack.Screen name="OverviewScreen" component={OverviewScreen} options={{ headerShown: false }} />
         
       </Stack.Navigator>
     </NavigationContainer>
