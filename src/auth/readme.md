@@ -1,1 +1,0 @@
-<!-- Authentication for the app -->

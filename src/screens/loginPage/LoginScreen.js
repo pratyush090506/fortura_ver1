@@ -1,109 +1,195 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  ImageBackground,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+} from 'react-native';
+
+import { getAuth, signInWithPhoneNumber } from '@react-native-firebase/auth';
 import { useThemeColor } from '../../hooks/useThemeColor';
-import { handleGoogleSignIn } from '../../auth/firebaseAuth';
-import {VerifyOTPScreen} from '../../screens/loginPage/VerifyOTPScreen';
-import auth from '@react-native-firebase/auth';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { setConfirmation } from '../../auth/confirmationStore';
 
-export default function LoginScreen({ navigation }) {
-  const { primary, text } = useThemeColor();
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [isMobileLogin, setIsMobileLogin] = useState(true);
+const LoginScreen = ({ navigation }) => {
+  const auth = getAuth();
 
-  const onMobileLogin = async () => {
-    let cleanedNumber = phoneNumber.replace(/\D/g, '');
-  
-    if (cleanedNumber.length < 10) {
-      Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
+  const [phone, setPhone] = useState('');
+  const [confirm, setConfirm] = useState(null);
+  const [code, setCode] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const colors = useThemeColor();
+
+  const handleSendOTP = async () => {
+    if (phone.length < 10) {
+      Alert.alert('Invalid Phone Number', 'Please enter a valid 10-digit number.');
       return;
     }
-  
-    if (cleanedNumber.startsWith('0')) {
-      cleanedNumber = cleanedNumber.substring(1);
-    }
-  
-    const formattedNumber = `+91${cleanedNumber}`;
-  
+
+    setLoading(true);
     try {
-      const confirmation = await auth().signInWithPhoneNumber(formattedNumber);
-      setConfirmation(confirmation); // ✅ store globally
-      Alert.alert('OTP Sent', `An OTP has been sent to ${formattedNumber}.`);
-      navigation.navigate('VerifyOTPScreen', { phoneNumber: formattedNumber }); // ⛔ don't pass confirmation
+      const fullPhone = phone.startsWith('+91') ? phone : `+91${phone}`;
+      const confirmation = await signInWithPhoneNumber(getAuth(), fullPhone);
+      setConfirm(confirmation);
     } catch (error) {
-      console.error("Error during OTP request:", error);
-      Alert.alert('Error', error.message);
+      console.log('OTP Error:', error);
+      Alert.alert('Error', 'Failed to send OTP. Try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  
+  const handleVerifyOTP = async () => {
+    setLoading(true);
+    try {
+      await confirm.confirm(code);
+      navigation.replace('Main');
+    } catch (error) {
+      console.log('❌ Invalid code:', error);
+      Alert.alert('Invalid OTP', 'The OTP you entered is incorrect.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ImageBackground
+        source={require('../../assets/payScreenBackground.png')}
+        style={styles.bg}
+        resizeMode="cover"
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+        >
+          <View style={styles.flexGrow} />
 
-      isMobileLogin ? (
-        <>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your mobile number"
-            keyboardType="phone-pad"
-            maxLength={10}
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-          />
-          <TouchableOpacity style={[styles.button, { backgroundColor: primary }]} onPress={onMobileLogin}>
-            <Text style={[styles.buttonText, { color: text }]}>Request OTP</Text>
-          </TouchableOpacity>
-        </>
-      )
+          <View style={[styles.sheet, { backgroundColor: colors.card }]}>
+            <View style={styles.grabberContainer}>
+              <View style={styles.grabber} />
+            </View>
 
-      <TouchableOpacity style={styles.toggleButton} onPress={() => setIsMobileLogin(!isMobileLogin)}>
-        <Text style={styles.toggleText}>
-          {isMobileLogin}
-        </Text>
-      </TouchableOpacity>
-    </View>
+            <Text style={[styles.title, { color: colors.text }]}>Login to continue</Text>
+
+            {!confirm ? (
+              <>
+                <Text style={[styles.label, { color: colors.text }]}>Enter Phone Number:</Text>
+                <TextInput
+                  style={[styles.input, { borderColor: colors.border, color: colors.text }]}
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                  placeholder="Enter phone number"
+                  placeholderTextColor={colors.secondary}
+                />
+                <Pressable
+                  style={[styles.button, { backgroundColor: colors.primary }]}
+                  onPress={handleSendOTP}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.buttonText}>Send OTP</Text>
+                  )}
+                </Pressable>
+              </>
+            ) : (
+              <>
+                <Text style={[styles.label, { color: colors.text }]}>Enter OTP:</Text>
+                <TextInput
+                  style={[styles.input, { borderColor: colors.border, color: colors.text }]}
+                  value={code}
+                  onChangeText={setCode}
+                  keyboardType="phone-pad"
+                  placeholder="123456"
+                  placeholderTextColor={colors.secondary}
+                />
+                <Pressable
+                  style={[styles.button, { backgroundColor: colors.primary }]}
+                  onPress={handleVerifyOTP}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.buttonText}>Verify OTP</Text>
+                  )}
+                </Pressable>
+              </>
+            )}
+          </View>
+        </KeyboardAvoidingView>
+      </ImageBackground>
+    </TouchableWithoutFeedback>
   );
-}
+};
 
 const styles = StyleSheet.create({
+  bg: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 20,
+    justifyContent: 'flex-end',
+  },
+  flexGrow: {
+    flexGrow: 1,
+  },
+  sheet: {
+    width: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    elevation: 10,
+  },
+  grabberContainer: {
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  grabber: {
+    width: 60,
+    height: 5,
+    backgroundColor: '#ccc',
+    borderRadius: 3,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 12,
     textAlign: 'center',
   },
+  label: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
   input: {
-    height: 50,
-    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 20,
+    padding: 14,
+    borderRadius: 12,
+    fontSize: 16,
+    marginBottom: 16,
   },
   button: {
-    padding: 15,
-    borderRadius: 5,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
-    marginBottom: 10,
+    marginTop: 4,
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  toggleButton: {
-    marginTop: 10,
-    alignItems: 'center',
-  },
-  toggleText: {
-    color: '#007AFF',
+    color: '#fff',
+    fontWeight: '700',
     fontSize: 16,
   },
 });
+
+export default LoginScreen;

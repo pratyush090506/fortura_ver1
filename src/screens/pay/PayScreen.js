@@ -18,7 +18,7 @@ const PayScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/payScreenBackground.png')}
+      source={require('../../assets/payScreenBackground.png')}
       style={styles.background}
       resizeMode="cover"
     >
