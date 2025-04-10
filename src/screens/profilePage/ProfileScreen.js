@@ -1,183 +1,163 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
-import { Card } from '../../components/Card';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import { useThemeColor } from '../../hooks/useThemeColor';
+import { useUser } from '../../context/UserContext';
+import { useCurrencyFormat } from '../../hooks/useCurrencyFormat';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ProfileScreen = ({ navigation }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const { text, background, primary, card } = useThemeColor();
+  const colors = useThemeColor();
+  const { userProfile, isLoading: userLoading } = useUser();
+  const { formatAmount, isLoading: currencyLoading } = useCurrencyFormat();
 
-  const handleMenuPress = (action) => {
-    switch (action) {
-      case 'logout':
-        setIsLoggedIn(false);
-        Alert.alert('Logged Out', 'You have been logged out.');
-        break;
-      case 'login':
-        navigation.navigate('Login');
-        break;
-      case 'edit-profile':
-        navigation.navigate('EditProfile');
-
-        break;
-      case 'notifications':
-        navigation.navigate('NotificationSettings');
-
-        break;
-      case 'linked-accounts':
-        Alert.alert('Linked Accounts', 'Account linking will be available soon!');
-        break;
-      case 'currency':
-        navigation.navigate('CurrencySettings');
-
-        break;
-      case 'theme':
-        navigation.navigate('ThemeSettings');
-
-        break;
-      case 'language':
-        navigation.navigate('LanguageSettings');
-
-        break;
-      case 'password':
-        Alert.alert('Change Password', 'Password change will be available soon!');
-        break;
-      case '2fa':
-        Alert.alert('Two-Factor Auth', '2FA setup will be available soon!');
-        break;
-      default:
-        break;
-    }
+  const handleMenuPress = (screen) => {
+    navigation.navigate(screen);
   };
 
+  if (userLoading || currencyLoading) {
+    return (
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={[styles.loadingText, { color: colors.text }]}>
+          Loading profile...
+        </Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.header}>
-          <Image
-            source={{
-              uri: 'https://static.vecteezy.com/system/resources/thumbnails/029/364/950/small_2x/3d-carton-of-boy-going-to-school-ai-photo.jpg',
-            }}
-            style={styles.avatar}
-          />
-          <Text style={[styles.name, { color: 'black' }]}>Kartikey</Text>
-          <Text style={[styles.email, { color: 'rgba(0, 0, 0, 0.7)' }]}>
-            kartikey.iAmTheTeamLead.hotmail.com
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={styles.header}>
+        <Image
+          source={{ uri: userProfile.avatar }}
+          style={styles.avatar}
+        />
+        <Text style={[styles.name, { color: colors.text }]}>{userProfile.name}</Text>
+        <Text style={[styles.email, { color: colors.text + 'B3' }]}>{userProfile.email}</Text>
+        {userProfile.location && (
+          <Text style={[styles.location, { color: colors.text + 'B3' }]}>
+            {userProfile.location}
           </Text>
-        </View>
-
-        {isLoggedIn ? (
-          <>
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: 'black' }]}>Account Settings</Text>
-
-              <Card style={styles.menuCard}>
-                <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('edit-profile')}>
-                  <MaterialCommunityIcons name="account-edit" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Edit Profile</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
-
-                <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('notifications')}>
-                  <MaterialCommunityIcons name="bell" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Notifications</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
-
-                <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('linked-accounts')}>
-                  <MaterialCommunityIcons name="bank" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Linked Accounts</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
-                </TouchableOpacity>
-              </Card>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: 'black' }]}>Preferences</Text>
-
-              <Card style={styles.menuCard}>
-                <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('currency')}>
-                  <MaterialCommunityIcons name="currency-usd" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Currency</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
-
-                <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('theme')}>
-                  <MaterialCommunityIcons name="theme-light-dark" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Theme</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
-
-                <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('language')}>
-                  <MaterialCommunityIcons name="translate" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Language</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
-                </TouchableOpacity>
-              </Card>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: 'black' }]}>Security</Text>
-
-              <Card style={styles.menuCard}>
-                <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('password')}>
-                  <MaterialCommunityIcons name="lock" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Change Password</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
-
-                <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('2fa')}>
-                  <MaterialCommunityIcons name="shield-check" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Two-Factor Auth</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
-                </TouchableOpacity>
-              </Card>
-
-              <TouchableOpacity
-                style={[styles.logoutButton, { backgroundColor: card }]}
-                onPress={() => handleMenuPress('logout')}>
-                <Text style={[styles.logoutText, { color: primary }]}>Log Out</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        ) : (
-          <TouchableOpacity
-            style={[styles.logoutButton, { backgroundColor: card }]}
-            onPress={() => handleMenuPress('login')}>
-            <Text style={[styles.logoutText, { color: primary }]}>Login</Text>
-          </TouchableOpacity>
         )}
-      </ScrollView>
-    </View>
+        {userProfile.bio && (
+          <Text style={[styles.bio, { color: colors.text + 'B3' }]}>
+            {userProfile.bio}
+          </Text>
+        )}
+      </View>
+
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Account Settings</Text>
+        <TouchableOpacity
+          style={[styles.menuItem, { backgroundColor: colors.card }]}
+          onPress={() => handleMenuPress('EditProfile')}
+        >
+          <MaterialCommunityIcons name="account-edit" size={24} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Edit Profile</Text>
+          <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text + 'B3'} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Preferences</Text>
+        <TouchableOpacity
+          style={[styles.menuItem, { backgroundColor: colors.card }]}
+          onPress={() => handleMenuPress('ThemeSettings')}
+        >
+          <MaterialCommunityIcons name="theme-light-dark" size={24} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Theme</Text>
+          <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text + 'B3'} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.menuItem, { backgroundColor: colors.card }]}
+          onPress={() => handleMenuPress('CurrencySettings')}
+        >
+          <MaterialCommunityIcons name="currency-usd" size={24} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Currency</Text>
+          <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text + 'B3'} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Security</Text>
+        <TouchableOpacity
+          style={[styles.menuItem, { backgroundColor: colors.card }]}
+          onPress={() => handleMenuPress('ChangePassword')}
+        >
+          <MaterialCommunityIcons name="lock" size={24} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Change Password</Text>
+          <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text + 'B3'} />
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  scrollView: { flex: 1 },
-  header: { padding: 24, paddingTop: 60, alignItems: 'center' },
-  avatar: { width: 100, height: 100, borderRadius: 50, marginBottom: 16 },
-  name: { fontSize: 24, fontWeight: 'bold', marginBottom: 4 },
-  email: { fontSize: 16 },
-  section: { padding: 24, paddingTop: 0 },
-  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 16 },
-  menuCard: { padding: 0 },
-  menuItem: { flexDirection: 'row', alignItems: 'center', padding: 16 },
-  menuText: { flex: 1, fontSize: 16, marginLeft: 16 },
-  divider: { height: 1, backgroundColor: '#E9ECEF' },
-  logoutButton: { marginTop: 24, padding: 16, borderRadius: 12, alignItems: 'center' },
-  logoutText: { fontSize: 16, fontWeight: '600' },
+  container: {
+    flex: 1,
+  },
+  header: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 16,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  email: {
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  location: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  bio: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  section: {
+    padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  menuText: {
+    flex: 1,
+    fontSize: 16,
+    marginLeft: 16,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });
 
 export default ProfileScreen;

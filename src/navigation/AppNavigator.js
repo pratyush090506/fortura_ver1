@@ -4,24 +4,24 @@ import { createStackNavigator } from '@react-navigation/stack';
 import OverviewScreen from '../screens/overviewPage/OverviewScreen';
 import PayScreen from '../screens/pay/PayScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import LoginScreen from '../screens/loginPage/LoginScreen'; 
+import VerifyOTPScreen from '../screens/loginPage/VerifyOTPScreen';
 import BudgetScreen from '../screens/budgetPage/BudgetScreen';
 import InsightsScreen from '../screens/insightsPage/InsightsScreen';
 import ProfileScreen from '../screens/profilePage/ProfileScreen';
+import EditProfileScreen from '../screens/profilePage/EditProfileScreen';
+import ThemeSettings from '../screens/profilePage/ThemeSettingsScreen';
+import CurrencySettings from '../screens/profilePage/CurrencySettingsScreen';
 import { useThemeColor } from '../hooks/useThemeColor';
+import { useTheme } from '../context/ThemeContext';
 
 const Stack = createStackNavigator();
-
-<Stack.Navigator>
-  <Stack.Screen name="Overview" component={OverviewScreen} />
-  <Stack.Screen name="Pay" component={PayScreen} />
-</Stack.Navigator>
-
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
-  const { primary } = useThemeColor();
+  const { primary, background, text } = useThemeColor();
 
   return (
     <Tab.Navigator initialRouteName="Overview"
@@ -87,13 +87,55 @@ function TabNavigator() {
   );
 }
 
-export default function AppNavigator() {
+const AppNavigator = () => {
+  const { primary } = useThemeColor();
+  const { isDark } = useTheme();
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator 
+        initialRouteName="Main"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: primary,
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      >
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="VerifyOTP" component={VerifyOTPScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
+        <Stack.Screen 
+          name="EditProfile" 
+          component={EditProfileScreen} 
+          options={{ 
+            title: 'Edit Profile',
+          }} 
+        />
+        <Stack.Screen 
+          name="ThemeSettings" 
+          component={ThemeSettings} 
+          options={{ 
+            title: 'Theme Settings',
+          }} 
+        />
+        <Stack.Screen 
+          name="CurrencySettings" 
+          component={CurrencySettings}
+          options={{
+            title: 'Currency Settings',
+            headerStyle: {
+              backgroundColor: primary,
+            },
+            headerTintColor: '#fff',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default AppNavigator;
