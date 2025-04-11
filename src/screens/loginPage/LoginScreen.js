@@ -16,11 +16,13 @@ import {
 
 import { getAuth, signInWithPhoneNumber } from '@react-native-firebase/auth';
 import { useThemeColor } from '../../hooks/useThemeColor';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }) => {
   const auth = getAuth();
 
   const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,6 +30,11 @@ const LoginScreen = ({ navigation }) => {
   const colors = useThemeColor();
 
   const handleSendOTP = async () => {
+    if (!name) {
+      Alert.alert('Name Required', 'Please enter your name.');
+      return;
+    }
+
     if (phone.length < 10) {
       Alert.alert('Invalid Phone Number', 'Please enter a valid 10-digit number.');
       return;
@@ -50,7 +57,11 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await confirm.confirm(code);
-      navigation.replace('Main');
+      
+      await AsyncStorage.setItem('name', name);
+      await AsyncStorage.setItem('phone', phone);
+      
+      navigation.replace('Main', { name, phone });
     } catch (error) {
       console.log('❌ Invalid code:', error);
       Alert.alert('Invalid OTP', 'The OTP you entered is incorrect.');
@@ -81,6 +92,17 @@ const LoginScreen = ({ navigation }) => {
 
             {!confirm ? (
               <>
+                {/* Name Input */}
+                <Text style={[styles.label, { color: colors.text }]}>Enter Name:</Text>
+                <TextInput
+                  style={[styles.input, { borderColor: colors.border, color: colors.text }]}
+                  value={name}
+                  onChangeText={setName}
+                  placeholder="Enter your name"
+                  placeholderTextColor={colors.secondary}
+                />
+
+                {/* Phone Number Input */}
                 <Text style={[styles.label, { color: colors.text }]}>Enter Phone Number:</Text>
                 <TextInput
                   style={[styles.input, { borderColor: colors.border, color: colors.text }]}
@@ -90,6 +112,8 @@ const LoginScreen = ({ navigation }) => {
                   placeholder="Enter phone number"
                   placeholderTextColor={colors.secondary}
                 />
+                
+                {/* Send OTP Button */}
                 <Pressable
                   style={[styles.button, { backgroundColor: colors.primary }]}
                   onPress={handleSendOTP}
@@ -103,6 +127,7 @@ const LoginScreen = ({ navigation }) => {
               </>
             ) : (
               <>
+                {/* OTP Input */}
                 <Text style={[styles.label, { color: colors.text }]}>Enter OTP:</Text>
                 <TextInput
                   style={[styles.input, { borderColor: colors.border, color: colors.text }]}
@@ -112,6 +137,8 @@ const LoginScreen = ({ navigation }) => {
                   placeholder="123456"
                   placeholderTextColor={colors.secondary}
                 />
+                
+                {/* Verify OTP Button */}
                 <Pressable
                   style={[styles.button, { backgroundColor: colors.primary }]}
                   onPress={handleVerifyOTP}

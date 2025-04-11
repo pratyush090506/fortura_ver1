@@ -9,7 +9,7 @@ import { useThemeColor } from '../hooks/useThemeColor';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const OverviewIcon = ({ color, size }) => (
+const OverviewIcon = ({ color, size}) => (
   <MaterialCommunityIcons name="view-dashboard" size={size} color={color} />
 );
 

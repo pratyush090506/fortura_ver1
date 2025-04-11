@@ -1,10 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
 import { Card } from '../../components/Card';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ navigation}) => {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const storedName = await AsyncStorage.getItem('name');
+        const storedPhone = await AsyncStorage.getItem('phone');
+        
+        if (storedName && storedPhone) {
+          setName(storedName);
+          setPhone(storedPhone);
+        }
+      } catch (error) {
+        console.log('Error retrieving user data from AsyncStorage', error);
+      }
+    };
+
+    getUserData();
+  }, []);
+
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const { text, background, primary, card } = useThemeColor();
 
@@ -48,10 +70,8 @@ const ProfileScreen = ({ navigation }) => {
             }}
             style={styles.avatar}
           />
-          <Text style={[styles.name, { color: 'black' }]}>test</Text>
-          <Text style={[styles.email, { color: 'rgba(0, 0, 0, 0.7)' }]}>
-            test@fortura.com
-          </Text>
+          <Text style={[styles.name, { color: 'black' }]}>{name}</Text>
+          <Text style={[styles.phone, { color: 'black' }]}>{phone}</Text>
         </View>
 
         {isLoggedIn ? (
@@ -131,7 +151,7 @@ const styles = StyleSheet.create({
   header: { padding: 24, paddingTop: 60, alignItems: 'center' },
   avatar: { width: 100, height: 100, borderRadius: 50, marginBottom: 16 },
   name: { fontSize: 24, fontWeight: 'bold', marginBottom: 4 },
-  email: { fontSize: 16 },
+  phone: { fontSize: 16 },
   section: { padding: 24, paddingTop: 0 },
   sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 16 },
   menuCard: { padding: 0 },
