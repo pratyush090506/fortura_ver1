@@ -84,9 +84,6 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.flexGrow} />
 
           <View style={[styles.sheet, { backgroundColor: colors.card }]}>
-            <View style={styles.grabberContainer}>
-              <View style={styles.grabber} />
-            </View>
 
             <Text style={[styles.title, { color: colors.text }]}>Login to continue</Text>
 
@@ -176,17 +173,7 @@ const styles = StyleSheet.create({
     padding: 24,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    elevation: 10,
-  },
-  grabberContainer: {
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  grabber: {
-    width: 60,
-    height: 5,
-    backgroundColor: '#ccc',
-    borderRadius: 3,
+    elevation: 0,
   },
   title: {
     fontSize: 20,

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import AppNavigator from './navigation/AppNavigator';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { UserProvider } from './context/UserContext';
 
 export default function App() {
   useEffect(() => {
@@ -9,5 +10,9 @@ export default function App() {
     });
   }, []);
 
-  return (<AppNavigator />);
+  return (
+    <UserProvider>
+      <AppNavigator/>
+    </UserProvider>
+);
 }
