@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useContext } from 'react';
 import {
   View,
   Text,
@@ -16,13 +16,14 @@ import {
 
 import { getAuth, signInWithPhoneNumber } from '@react-native-firebase/auth';
 import { useThemeColor } from '../../hooks/useThemeColor';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserContext } from '../../context/UserContext';
 
 const LoginScreen = ({ navigation }) => {
   const auth = getAuth();
 
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
+  const {setUser} = useContext(UserContext)
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -57,9 +58,8 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await confirm.confirm(code);
-      
-      await AsyncStorage.setItem('name', name);
-      await AsyncStorage.setItem('phone', phone);
+
+      setUser({name:name, phone:phone});
       
       navigation.replace('Main', { name, phone });
     } catch (error) {

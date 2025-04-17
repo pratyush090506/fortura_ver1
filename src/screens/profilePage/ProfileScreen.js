@@ -1,31 +1,12 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState , useContext} from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
 import { Card } from '../../components/Card';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserContext } from '../../context/UserContext';
 
 const ProfileScreen = ({ navigation}) => {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const storedName = await AsyncStorage.getItem('name');
-        const storedPhone = await AsyncStorage.getItem('phone');
-        
-        if (storedName && storedPhone) {
-          setName(storedName);
-          setPhone(storedPhone);
-        }
-      } catch (error) {
-        console.log('Error retrieving user data from AsyncStorage', error);
-      }
-    };
-
-    getUserData();
-  }, []);
+  const {user} = useContext(UserContext);
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const { text, background, primary, card } = useThemeColor();
@@ -35,6 +16,7 @@ const ProfileScreen = ({ navigation}) => {
       case 'logout':
         setIsLoggedIn(false);
         Alert.alert('Logged Out', 'You have been logged out.');
+        navigation.navigate('Login');
         break;
       case 'login':
         navigation.navigate('Login');
@@ -70,8 +52,8 @@ const ProfileScreen = ({ navigation}) => {
             }}
             style={styles.avatar}
           />
-          <Text style={[styles.name, { color: 'black' }]}>{name}</Text>
-          <Text style={[styles.phone, { color: 'black' }]}>{phone}</Text>
+          <Text style={[styles.name, { color: 'black' }]}>{user.name}</Text>
+          <Text style={[styles.phone, { color: 'black' }]}>{user.phone}</Text>
         </View>
 
         {isLoggedIn ? (

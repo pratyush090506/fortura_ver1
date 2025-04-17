@@ -1,29 +1,13 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import {StyleSheet,View,Text,ScrollView,TouchableOpacity,Platform,Dimensions} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Card} from '../../components/Card';
 import {useThemeColor} from '../../hooks/useThemeColor';
 import {BarChart} from 'react-native-chart-kit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserContext } from '../../context/UserContext';
 
 const OverviewScreen = () => {
-  const [name, setName] = useState('');
-
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const storedName = await AsyncStorage.getItem('name');
-        
-        if (storedName) {
-          setName(storedName);
-        }
-      } catch (error) {
-        console.log('Error retrieving user data from AsyncStorage', error);
-      }
-    };
-
-    getUserData();
-  }, []);
+  const {user} = useContext(UserContext);
 
   const {text, primary, background, success, warning, error} = useThemeColor();
 
@@ -55,7 +39,7 @@ const OverviewScreen = () => {
       <View style={styles.header}>
         <View>
           <Text style={[styles.greeting, {color: text}]}>Welcome back,</Text>
-          <Text style={[styles.name, {color: text}]}>{name}</Text>
+          <Text style={[styles.name, {color: text}]}>{user.name}</Text>
         </View>
         <TouchableOpacity style={[styles.aiButton, {backgroundColor: primary}]}>
           <MaterialCommunityIcons name="robot" size={20} color="white" />

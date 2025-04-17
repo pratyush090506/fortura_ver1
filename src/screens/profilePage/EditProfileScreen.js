@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useThemeColor } from "../../hooks/useThemeColor";
 import { Card } from "../../components/Card";
+import { UserContext } from "../../context/UserContext";
 
 export default function EditProfileScreen() {
   const { primary } = useThemeColor();
 
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const {user, setUser} = useContext(UserContext);
+
+  const [name, setName] = useState(user.name);
+  // const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('Please set your E-mail');
 
   const [isEditingName, setIsEditingName] = useState(false);
@@ -19,12 +22,12 @@ export default function EditProfileScreen() {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const storedName = await AsyncStorage.getItem('name');
-        const storedPhone = await AsyncStorage.getItem('phone');
+        // const storedName = await AsyncStorage.getItem('name');
+        // const storedPhone = await AsyncStorage.getItem('phone');
         const storedEmail = await AsyncStorage.getItem('email');
 
-        if (storedName) setName(storedName);
-        if (storedPhone) setPhone(storedPhone);
+        // if (storedName) setName(storedName);
+        // if (storedPhone) setPhone(storedPhone);
         if (storedEmail) setEmail(storedEmail);
       } catch (error) {
         console.log('Error retrieving user data from AsyncStorage', error);
@@ -35,8 +38,7 @@ export default function EditProfileScreen() {
   }, []);
 
   const handleNameBlur = async () => {
-    setIsEditingName(false);
-    await AsyncStorage.setItem('name', name);
+    setUser({...user, name:name})
   };
 
   const handleEmailBlur = async () => {
@@ -49,7 +51,7 @@ export default function EditProfileScreen() {
       <Card style={{margin:20}}>
         <View style={styles.row}>
           <MaterialCommunityIcons name="cellphone" size={24} />
-          <Text style={styles.text}>+91{phone}</Text>
+          <Text style={styles.text}>+91{user.phone}</Text>
           <View style={{ flex: 1 }} />
           <MaterialCommunityIcons name="check-circle-outline" size={20} color={primary} />
         </View>
