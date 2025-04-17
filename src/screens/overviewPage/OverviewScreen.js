@@ -6,14 +6,11 @@ import {useThemeColor} from '../../hooks/useThemeColor';
 import {BarChart} from 'react-native-chart-kit';
 import { UserContext } from '../../context/UserContext';
 import { useNavigation } from '@react-navigation/native';
-import { GEMINI_API_KEY } from '@env';
+
 const OverviewScreen = () => {
   const {user} = useContext(UserContext);
-
   const {text, primary, background, success, warning, error} = useThemeColor();
-
-  const screenWidth = Dimensions.get('window').width
-
+  const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
 
   const data = {
@@ -21,13 +18,13 @@ const OverviewScreen = () => {
     datasets:[
       {data: [20000,45000,28000,80000],}
     ]
-  }
+  };
 
   const chartConfig = {
     backgroundColor: '#ffffff',
     backgroundGradientFrom: '#ffffff',
     backgroundGradientTo: '#ffffff',
-    decimalPlaces: 0, 
+    decimalPlaces: 0,
     color: (opacity = 1) => `rgba(98, 0, 238, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     fillShadowGradient: '#6200EE',
@@ -35,6 +32,10 @@ const OverviewScreen = () => {
     style: {
       borderRadius: 16,
     },
+  };
+
+  const handleAnalyzeInvestmentOptions = () => {
+    navigation.navigate('Invest');
   };
 
   return (
@@ -45,7 +46,7 @@ const OverviewScreen = () => {
           <Text style={[styles.name, {color: text}]}>{user.name}</Text>
         </View>
         <TouchableOpacity
-            style={[styles.aiButton, {backgroundColor: primary}]}
+          style={[styles.aiButton, {backgroundColor: primary}]}
           onPress={() => navigation.navigate('AIAssistant')}>
           <MaterialCommunityIcons name="robot" size={20} color="white" />
           <Text style={styles.aiButtonText}>AI Assistant</Text>
@@ -156,7 +157,8 @@ const OverviewScreen = () => {
             Expected ROI: 12-15%
           </Text>
           <TouchableOpacity
-            style={[styles.actionButton, {backgroundColor: primary}]}>
+            style={[styles.actionButton, {backgroundColor: primary}]}
+            onPress={handleAnalyzeInvestmentOptions}> {/* Call the navigation function */}
             <Text style={styles.actionButtonText}>Analyze Options</Text>
           </TouchableOpacity>
         </Card>
