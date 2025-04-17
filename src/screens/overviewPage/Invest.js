@@ -1,3 +1,4 @@
+import { GEMINI_API_KEY } from '@env';
 import React, { useState } from 'react';
 import {
   View,
@@ -13,7 +14,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import { GEMINI_API_KEY } from '@env';
 import { Card } from '../../components/Card';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 

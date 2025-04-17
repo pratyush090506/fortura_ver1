@@ -120,27 +120,6 @@ const OverviewScreen = () => {
           AI Optimization Insights
         </Text>
 
-        <Card style={[styles.insightCard, {borderLeftColor: success}]}>
-          <View style={styles.insightHeader}>
-            <MaterialCommunityIcons
-              name="lightbulb-on"
-              size={24}
-              color={success}
-            />
-            <Text style={[styles.insightTitle, {color: success}]}>
-              Cost Saving Opportunity
-            </Text>
-          </View>
-          <Text style={styles.insightText}>
-            Switch to annual software subscriptions to save ₹2,400/year. 5
-            subscriptions identified.
-          </Text>
-          <TouchableOpacity
-            style={[styles.actionButton, {backgroundColor: success}]}>
-            <Text style={styles.actionButtonText}>View Details</Text>
-          </TouchableOpacity>
-        </Card>
-
         <Card style={[styles.insightCard, {borderLeftColor: primary}]}>
           <View style={styles.insightHeader}>
             <MaterialCommunityIcons
@@ -160,23 +139,6 @@ const OverviewScreen = () => {
             style={[styles.actionButton, {backgroundColor: primary}]}
             onPress={handleAnalyzeInvestmentOptions}> {/* Call the navigation function */}
             <Text style={styles.actionButtonText}>Analyze Options</Text>
-          </TouchableOpacity>
-        </Card>
-
-        <Card style={[styles.insightCard, {borderLeftColor: error}]}>
-          <View style={styles.insightHeader}>
-            <MaterialCommunityIcons name="alert" size={24} color={error} />
-            <Text style={[styles.insightTitle, {color: error}]}>
-              Risk Alert
-            </Text>
-          </View>
-          <Text style={styles.insightText}>
-            Vendor payment clustering detected. Recommend spreading payments to
-            optimize cash flow.
-          </Text>
-          <TouchableOpacity
-            style={[styles.actionButton, {backgroundColor: error}]}>
-            <Text style={styles.actionButtonText}>Optimize Schedule</Text>
           </TouchableOpacity>
         </Card>
       </View>

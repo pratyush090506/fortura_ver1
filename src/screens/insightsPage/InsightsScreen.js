@@ -1,195 +1,286 @@
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { Card } from '../../components/Card';
 import { useThemeColor } from '../../hooks/useThemeColor';
+import { useRoute } from '@react-navigation/native';
+import { GEMINI_API_KEY } from '@env';
+
+const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 export default function InsightsScreen() {
-  const { text, background, primary, success, warning, error } = useThemeColor();
+  const { text, background, primary, success, warning, error, secondary } = useThemeColor();
+  const route = useRoute();
+  const { budgetData } = route.params || { budgetData: null };
 
-  const spendingData = [
-    { label: 'Essential', value: 45, color: primary },
-    { label: 'Investment', value: 30, color: success },
-    { label: 'Leisure', value: 15, color: warning },
-    { label: 'Other', value: 10, color: error },
-  ];
+  const [financialScore, setFinancialScore] = useState(null);
+  const [spendingAnalysis, setSpendingAnalysis] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    if (budgetData) {
+      processBudgetWithGemini(budgetData);
+    } else {
+      setErrorMsg('No budget data available. Please edit your budget first.');
+    }
+  }, [budgetData]);
+
+  const processBudgetWithGemini = async (data) => {
+    setLoading(true);
+    setErrorMsg('');
+    setFinancialScore(null);
+    setSpendingAnalysis(null);
+    setRecommendations([]);
+
+    const prompt = `Critically analyze the following budget data and provide your response in two parts, separated by '***RECOMMENDATIONS***':
+
+Part 1: Financial Score and Spending Analysis as a JSON object with the following keys:
+{
+  "financialScore": An integer from 0-100,
+  "spendingAnalysis": [
+    { "category": "Food", "budgeted": 2000, "spent": 2500, "percentage": 125 },
+    ...
+  ]
+}
+
+***RECOMMENDATIONS***
+
+Part 2: Actionable recommendations as a plain text list. Wrap important words or actions with double asterisks (e.g., **Reduce spending**) Just give 3 to 4 interesting, precise and actionable recommendations.
+
+Budget Data:
+Total Budget: ₹${data.total}
+Total Spent: ₹${data.spent}
+Remaining: ₹${parseFloat(data.total) - parseFloat(data.spent)}
+
+Spending Categories:
+${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent ₹${cat.spent}`).join('\n')}
+`;
+
+    try {
+      const response = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            { parts: [{ text: prompt }] }
+          ],
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Gemini API Error:', errorData);
+        setErrorMsg(`Gemini error: ${response.status}`);
+        return;
+      }
+
+      const responseData = await response.json();
+      const outputText = responseData?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!outputText) {
+        setErrorMsg('No valid response from Gemini.');
+        return;
+      }
+
+      const [jsonPartRaw, recommendationsPart] = outputText.split('***RECOMMENDATIONS***');
+
+      if (!jsonPartRaw || !recommendationsPart) {
+        setErrorMsg('Invalid Gemini response format.');
+        return;
+      }
+
+      let jsonPart = jsonPartRaw.trim().replace(/^```json/, '').replace(/```$/, '').trim();
+
+      try {
+        const parsed = JSON.parse(jsonPart);
+        setFinancialScore(parsed.financialScore);
+
+        const analysisMap = parsed.spendingAnalysis.reduce((acc, item) => {
+          acc[item.category] = {
+            budgeted: item.budgeted,
+            spent: item.spent,
+            percentage: item.percentage,
+          };
+          return acc;
+        }, {});
+        setSpendingAnalysis(analysisMap);
+
+        const recList = recommendationsPart
+          .split('\n')
+          .map(line => line.trim())
+          .filter(Boolean);
+        setRecommendations(recList);
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        setErrorMsg('Failed to parse financial data from Gemini.');
+      }
+    } catch (err) {
+      console.error('API Request Failed:', err);
+      setErrorMsg('Failed to communicate with Gemini.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getColorForCategory = (label) => {
+    const name = label?.replace(/\*\*/g, '').trim().toLowerCase();
+    if (name.includes('food')) return primary;
+    if (name.includes('transportation')) return secondary;
+    if (name.includes('entertainment')) return warning;
+    if (name.includes('utilities')) return secondary;
+    if (name.includes('shopping')) return error;
+    return '#888';
+  };
+
+  const renderFormattedText = (text) => {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g); // Split on bold parts
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <Text key={index} style={{ fontWeight: 'bold' }}>
+            {part.slice(2, -2)}
+          </Text>
+        );
+      } else {
+        return <Text key={index}>{part}</Text>;
+      }
+    });
+  };
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: background }]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: text }]}>AI Insights</Text>
-        <Text style={styles.subtitle}>Your Financial Health Report</Text>
+        <Text style={[styles.subtitle, { color: secondary }]}>Your Financial Health Report</Text>
       </View>
 
-      <Card style={styles.scoreCard}>
-        <Text style={styles.scoreLabel}>Financial Health Score</Text>
-        <Text style={[styles.scoreValue, { color: success }]}>69</Text>
-        <Text style={styles.scoreTrend}>↑ 6.69 points from last month</Text>
-      </Card>
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={primary} />
+          <Text style={[styles.loadingText, { color: text }]}>Fetching Insights...</Text>
+        </View>
+      )}
 
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: text }]}>Spending Analysis</Text>
-        <Card style={styles.chartCard}>
-          {spendingData.map((item, index) => (
-            <View key={index} style={styles.spendingItem}>
-              <View style={styles.spendingHeader}>
-                <Text style={[styles.spendingLabel, { color: text }]}>{item.label}</Text>
-                <Text style={[styles.spendingValue, { color: item.color }]}>{item.value}%</Text>
-              </View>
-              <View style={styles.progressBar}>
-                <View 
-                  style={[
-                    styles.progressFill, 
-                    { width: `${item.value}%`, backgroundColor: item.color }
-                  ]} 
-                />
-              </View>
-            </View>
-          ))}
-        </Card>
-      </View>
+      {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
 
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: text }]}>AI Recommendations</Text>
-        
-        <Card style={styles.recommendationCard}>
-          <View style={styles.recommendationHeader}>
-            <Text style={[styles.recommendationTitle, { color: success }]}>
-              💰 Savings Opportunity
+      {!loading && financialScore !== null && spendingAnalysis && recommendations.length > 0 ? (
+        <>
+          <Card style={styles.scoreCard}>
+            <Text style={styles.scoreLabel}>Financial Health Score</Text>
+            <Text
+              style={[
+                styles.scoreValue,
+                {
+                  color:
+                    financialScore > 70 ? success : financialScore > 50 ? warning : error,
+                },
+              ]}
+            >
+              {financialScore}
             </Text>
-            <Text style={styles.impactScore}>High Impact</Text>
-          </View>
-          <Text style={styles.recommendationText}>
-            You could save ₹150/month by consolidating your streaming subscriptions.
-            Consider our suggested bundle options.
-          </Text>
-        </Card>
+            <Text style={styles.scoreTrend}>Based on AI analysis</Text>
+          </Card>
 
-        <Card style={styles.recommendationCard}>
-          <View style={styles.recommendationHeader}>
-            <Text style={[styles.recommendationTitle, { color: warning }]}>
-              📊 Investment Timing
-            </Text>
-            <Text style={styles.impactScore}>Medium Impact</Text>
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: text }]}>Spending Analysis</Text>
+            <Card style={styles.chartCard}>
+              {Object.entries(spendingAnalysis).map(([label, value]) => (
+                <View key={label} style={styles.spendingItem}>
+                  <View style={styles.spendingHeader}>
+                    <Text style={[styles.spendingLabel, { color: text }]}>
+                      {label.replace(/\*\*/g, '')}
+                    </Text>
+                    <Text style={[styles.spendingValue, { color: getColorForCategory(label) }]}>
+                      {value.percentage}%
+                    </Text>
+                  </View>
+                  <View style={styles.progressBar}>
+                    <View
+                      style={[
+                        styles.progressFill,
+                        {
+                          width: `${parseFloat(value.percentage) || 0}%`,
+                          backgroundColor: getColorForCategory(label),
+                        },
+                      ]}
+                    />
+                  </View>
+                </View>
+              ))}
+            </Card>
           </View>
-          <Text style={styles.recommendationText}>
-            Market conditions suggest it's a good time to increase your stock portfolio.
-            We recommend adding to your index fund investments.
-          </Text>
-        </Card>
 
-        <Card style={styles.recommendationCard}>
-          <View style={styles.recommendationHeader}>
-            <Text style={[styles.recommendationTitle, { color: error }]}>
-              ⚠️ Risk Alert
-            </Text>
-            <Text style={styles.impactScore}>High Impact</Text>
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: text }]}>AI Recommendations</Text>
+            {recommendations.map((rec, idx) => (
+              <Card key={idx} style={styles.recommendationCard}>
+                <View style={styles.recommendationHeader}>
+                  <Text style={[styles.recommendationTitle, { color: primary }]}>
+                    💡 Recommendation {idx + 1}
+                  </Text>
+                </View>
+                <Text style={styles.recommendationText}>{renderFormattedText(rec)}</Text>
+              </Card>
+            ))}
           </View>
-          <Text style={styles.recommendationText}>
-            Your emergency fund is below the recommended 6-month coverage.
-            Consider allocating more to your savings.
-          </Text>
+        </>
+      ) : !loading && !errorMsg ? (
+        <Card style={styles.infoCard}>
+          <Text style={styles.infoText}>No insights available.</Text>
         </Card>
-      </View>
+      ) : null}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    padding: 24,
-    paddingTop: 60,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    fontSize: 16,
-    opacity: 0.7,
-    marginTop: 4,
-  },
-  scoreCard: {
-    margin: 24,
-    marginTop: 0,
-    alignItems: 'center',
-  },
-  scoreLabel: {
-    fontSize: 16,
-    opacity: 0.7,
-    marginBottom: 8,
-  },
-  scoreValue: {
-    fontSize: 48,
-    fontWeight: 'bold',
-  },
-  scoreTrend: {
-    fontSize: 14,
-    marginTop: 8,
-  },
-  section: {
-    padding: 24,
-    paddingTop: 0,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  chartCard: {
-    padding: 16,
-  },
-  spendingItem: {
-    marginBottom: 16,
-  },
+  container: { flex: 1 },
+  header: { padding: 24, paddingTop: 60 },
+  title: { fontSize: 28, fontWeight: 'bold' },
+  subtitle: { fontSize: 16, opacity: 0.7, marginTop: 4 },
+  loadingIndicator: { marginTop: 40 },
+  errorText: { color: 'red', textAlign: 'center', marginTop: 40, fontSize: 16 },
+  scoreCard: { margin: 24, marginTop: 0, alignItems: 'center' },
+  scoreLabel: { fontSize: 16, opacity: 0.7, marginBottom: 8 },
+  scoreValue: { fontSize: 48, fontWeight: 'bold' },
+  scoreTrend: { fontSize: 14, marginTop: 8 },
+  section: { padding: 24, paddingTop: 0 },
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 16 },
+  chartCard: { padding: 16 },
+  spendingItem: { marginBottom: 16 },
   spendingHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 8,
   },
-  spendingLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  spendingValue: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  spendingLabel: { fontSize: 16, fontWeight: '500' },
+  spendingValue: { fontSize: 16, fontWeight: 'bold' },
   progressBar: {
     height: 8,
     backgroundColor: '#E9ECEF',
     borderRadius: 4,
     overflow: 'hidden',
   },
-  progressFill: {
-    height: '100%',
-    borderRadius: 4,
-  },
-  recommendationCard: {
-    marginBottom: 16,
-  },
+  progressFill: { height: '100%', borderRadius: 4 },
+  recommendationCard: { marginBottom: 16, padding: 16 },
   recommendationHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 8,
   },
-  recommendationTitle: {
+  recommendationTitle: { fontSize: 16, fontWeight: 'bold' },
+  recommendationText: { fontSize: 15, lineHeight: 22 },
+  infoCard: { margin: 24, padding: 16 },
+  infoText: { fontSize: 16, textAlign: 'center' },
+  loadingContainer: {
+    marginTop: 40,
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
     fontSize: 16,
-    fontWeight: 'bold',
-  },
-  impactScore: {
-    fontSize: 12,
-    backgroundColor: '#E9ECEF',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  recommendationText: {
-    fontSize: 14,
-    lineHeight: 20,
-    opacity: 0.8,
   },
 });
