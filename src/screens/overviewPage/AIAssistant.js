@@ -17,7 +17,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useThemeColor} from '../../hooks/useThemeColor';
 const API_ENDPOINT =
   `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
-const API_KEY = 'AIzaSyD0WWKN477TSR0W8DItBsCauxLuUB-f8xA';
 
 const AIAssistantScreen = () => {
   const [query, setQuery] = useState('');
