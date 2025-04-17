@@ -6,7 +6,7 @@ import {useThemeColor} from '../../hooks/useThemeColor';
 import {BarChart} from 'react-native-chart-kit';
 import { UserContext } from '../../context/UserContext';
 import { useNavigation } from '@react-navigation/native';
-
+import { GEMINI_API_KEY } from '@env';
 const OverviewScreen = () => {
   const {user} = useContext(UserContext);
 
