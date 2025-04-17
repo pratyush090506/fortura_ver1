@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { LoginScreen,OverviewScreen,PayScreen,BudgetScreen,InsightsScreen,ProfileNavigator } from '../screens';
-import { useThemeColor } from '../hooks/useThemeColor';
+import { useThemeColor } from '../context/ThemeProvider';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

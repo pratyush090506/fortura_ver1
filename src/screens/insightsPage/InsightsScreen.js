@@ -1,32 +1,34 @@
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Card } from '../../components/Card';
-import { useThemeColor } from '../../hooks/useThemeColor';
+import { useThemeColor } from '../../context/ThemeProvider';
+import { useTranslation } from 'react-i18next';
 
 export default function InsightsScreen() {
   const { text, background, primary, success, warning, error } = useThemeColor();
+  const {t} = useTranslation();
 
   const spendingData = [
-    { label: 'Essential', value: 45, color: primary },
-    { label: 'Investment', value: 30, color: success },
-    { label: 'Leisure', value: 15, color: warning },
-    { label: 'Other', value: 10, color: error },
+    { label: t('Essential'), value: 45, color: primary },
+    { label: t('Investment'), value: 30, color: success },
+    { label: t('Leisure'), value: 15, color: warning },
+    { label: t('Other'), value: 10, color: error },
   ];
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: background }]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: text }]}>AI Insights</Text>
-        <Text style={styles.subtitle}>Your Financial Health Report</Text>
+        <Text style={[styles.title, { color: text }]}>{t('aiInsights')}</Text>
+        <Text style={[styles.subtitle, { color: text }]}>{t('financialHealthReport')}</Text>
       </View>
 
       <Card style={styles.scoreCard}>
-        <Text style={styles.scoreLabel}>Financial Health Score</Text>
+        <Text style={[styles.scoreLabel, { color: text }]}>{t('financialHealthScore')}</Text>
         <Text style={[styles.scoreValue, { color: success }]}>69</Text>
-        <Text style={styles.scoreTrend}>↑ 6.69 points from last month</Text>
+        <Text style={[styles.scoreTrend, { color: text }]}>'↑ 6.69 {t('pointsFromLastMonth')}</Text>
       </Card>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: text }]}>Spending Analysis</Text>
+        <Text style={[styles.sectionTitle, { color: text }]}>{t('spendingAnalysis')}</Text>
         <Card style={styles.chartCard}>
           {spendingData.map((item, index) => (
             <View key={index} style={styles.spendingItem}>
@@ -48,44 +50,41 @@ export default function InsightsScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: text }]}>AI Recommendations</Text>
+        <Text style={[styles.sectionTitle, { color: text }]}>{t('aiRecommendations')}</Text>
         
         <Card style={styles.recommendationCard}>
           <View style={styles.recommendationHeader}>
             <Text style={[styles.recommendationTitle, { color: success }]}>
-              💰 Savings Opportunity
+              💰 {t('savingsOpportunity')}
             </Text>
-            <Text style={styles.impactScore}>High Impact</Text>
+            <Text style={styles.impactScore}>{t('highImpact')}</Text>
           </View>
-          <Text style={styles.recommendationText}>
-            You could save ₹150/month by consolidating your streaming subscriptions.
-            Consider our suggested bundle options.
+          <Text style={[styles.recommendationText, { color: text }]}>
+            {t('suggestionStreaming')}
           </Text>
         </Card>
 
         <Card style={styles.recommendationCard}>
           <View style={styles.recommendationHeader}>
             <Text style={[styles.recommendationTitle, { color: warning }]}>
-              📊 Investment Timing
+              📊 {t('investmentTiming')}
             </Text>
-            <Text style={styles.impactScore}>Medium Impact</Text>
+            <Text style={styles.impactScore}>{t('mediumImpact')}</Text>
           </View>
-          <Text style={styles.recommendationText}>
-            Market conditions suggest it's a good time to increase your stock portfolio.
-            We recommend adding to your index fund investments.
+          <Text style={[styles.recommendationText, { color: text }]}>
+            {t('suggestionInvestment')}
           </Text>
         </Card>
 
         <Card style={styles.recommendationCard}>
           <View style={styles.recommendationHeader}>
             <Text style={[styles.recommendationTitle, { color: error }]}>
-              ⚠️ Risk Alert
+              ⚠️ {t('riskAlert')}
             </Text>
-            <Text style={styles.impactScore}>High Impact</Text>
+            <Text style={styles.impactScore}>{t('High Impact')}</Text>
           </View>
-          <Text style={styles.recommendationText}>
-            Your emergency fund is below the recommended 6-month coverage.
-            Consider allocating more to your savings.
+          <Text style={[styles.recommendationText, { color: text }]}>
+            {t('suggestionEmergency')}
           </Text>
         </Card>
       </View>

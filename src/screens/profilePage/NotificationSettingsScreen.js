@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Switch, Button, Platform, Linking, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useThemeColor } from '../../hooks/useThemeColor';
+import { useThemeColor } from '../../context/ThemeProvider';
+import { useTranslation } from 'react-i18next';
 
 const NotificationSettingsScreen = () => {
-    const {primary} = useThemeColor();
-
+    const {primary,background , text} = useThemeColor();
+    const {t} = useTranslation();
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     
     useEffect(() => {
@@ -33,24 +34,26 @@ const NotificationSettingsScreen = () => {
     };
     
     return (
-        <View style={styles.container}>
-        <View style={styles.switchContainer}>
-            <Text style={styles.label}>Enable Notifications</Text>
-            <Switch
-            onValueChange={toggleSwitch}
-            value={notificationsEnabled}
-            trackColor={{ false: '#ccc', true: '#ccc' }}
-            thumbColor={notificationsEnabled ? primary : '#f4f3f4'}
-            />
-        </View>
-    
-        <Button title="Open App Settings" onPress={openNotificationSettings} color={primary}/>
+        <View style={[{flex:1},{backgroundColor:background}]}>
+            <View style={[styles.container , {backgroundColor: background}]}>
+                <View style={styles.switchContainer}>
+                    <Text style={[styles.label , {color: text}]}>{t('Enable Notifications')}</Text>
+                    <Switch
+                    onValueChange={toggleSwitch}
+                    value={notificationsEnabled}
+                    trackColor={{ false: '#ccc', true: '#ccc' }}
+                    thumbColor={notificationsEnabled ? primary : '#f4f3f4'}
+                    />
+                </View>
+            
+                <Button title={t('Open App Settings')} onPress={openNotificationSettings} color={primary}/>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 20 },
   switchContainer: {
     flexDirection: 'row', 
     justifyContent: 'space-between',

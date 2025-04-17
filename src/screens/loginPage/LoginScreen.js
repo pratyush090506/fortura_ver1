@@ -15,11 +15,13 @@ import {
 } from 'react-native';
 
 import { getAuth, signInWithPhoneNumber } from '@react-native-firebase/auth';
-import { useThemeColor } from '../../hooks/useThemeColor';
+import { useThemeColor } from '../../context/ThemeProvider';
 import { UserContext } from '../../context/UserContext';
+import { useTranslation } from 'react-i18next';
 
 const LoginScreen = ({ navigation }) => {
   const auth = getAuth();
+  const {t} = useTranslation();
 
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
@@ -32,12 +34,12 @@ const LoginScreen = ({ navigation }) => {
 
   const handleSendOTP = async () => {
     if (!name) {
-      Alert.alert('Name Required', 'Please enter your name.');
+      Alert.alert(t('nameRequiredTitle'), t('nameRequiredMessage'));
       return;
     }
 
     if (phone.length < 10) {
-      Alert.alert('Invalid Phone Number', 'Please enter a valid 10-digit number.');
+      Alert.alert(t('phoneRequired'), t('phoneRequiredMessage'));
       return;
     }
 
@@ -48,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
       setConfirm(confirmation);
     } catch (error) {
       console.log('OTP Error:', error);
-      Alert.alert('Error', 'Failed to send OTP. Try again.');
+      Alert.alert(t('error'), t('failOTP'));
     } finally {
       setLoading(false);
     }
@@ -64,7 +66,7 @@ const LoginScreen = ({ navigation }) => {
       navigation.replace('Main', { name, phone });
     } catch (error) {
       console.log('❌ Invalid code:', error);
-      Alert.alert('Invalid OTP', 'The OTP you entered is incorrect.');
+      Alert.alert(t('invalidOTP'), t('invalidOTPMsg'));
     } finally {
       setLoading(false);
     }
@@ -85,12 +87,11 @@ const LoginScreen = ({ navigation }) => {
 
           <View style={[styles.sheet, { backgroundColor: colors.card }]}>
 
-            <Text style={[styles.title, { color: colors.text }]}>Login to continue</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('loginToContinue')}</Text>
 
             {!confirm ? (
               <>
-                {/* Name Input */}
-                <Text style={[styles.label, { color: colors.text }]}>Enter Name:</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t('Enter Name:')}</Text>
                 <TextInput
                   style={[styles.input, { borderColor: colors.border, color: colors.text }]}
                   value={name}
@@ -99,8 +100,7 @@ const LoginScreen = ({ navigation }) => {
                   placeholderTextColor={colors.secondary}
                 />
 
-                {/* Phone Number Input */}
-                <Text style={[styles.label, { color: colors.text }]}>Enter Phone Number:</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t('Enter Phone Number:')}</Text>
                 <TextInput
                   style={[styles.input, { borderColor: colors.border, color: colors.text }]}
                   value={phone}
@@ -110,7 +110,6 @@ const LoginScreen = ({ navigation }) => {
                   placeholderTextColor={colors.secondary}
                 />
                 
-                {/* Send OTP Button */}
                 <Pressable
                   style={[styles.button, { backgroundColor: colors.primary }]}
                   onPress={handleSendOTP}
@@ -118,14 +117,13 @@ const LoginScreen = ({ navigation }) => {
                   {loading ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
-                    <Text style={styles.buttonText}>Send OTP</Text>
+                    <Text style={styles.buttonText}>{t('Send OTP')}</Text>
                   )}
                 </Pressable>
               </>
             ) : (
               <>
-                {/* OTP Input */}
-                <Text style={[styles.label, { color: colors.text }]}>Enter OTP:</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t('Enter OTP:')}</Text>
                 <TextInput
                   style={[styles.input, { borderColor: colors.border, color: colors.text }]}
                   value={code}
@@ -135,7 +133,6 @@ const LoginScreen = ({ navigation }) => {
                   placeholderTextColor={colors.secondary}
                 />
                 
-                {/* Verify OTP Button */}
                 <Pressable
                   style={[styles.button, { backgroundColor: colors.primary }]}
                   onPress={handleVerifyOTP}
@@ -143,7 +140,7 @@ const LoginScreen = ({ navigation }) => {
                   {loading ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
-                    <Text style={styles.buttonText}>Verify OTP</Text>
+                    <Text style={styles.buttonText}>{t('Verify OTP')}</Text>
                   )}
                 </Pressable>
               </>
