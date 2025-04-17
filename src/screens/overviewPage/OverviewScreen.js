@@ -5,6 +5,7 @@ import {Card} from '../../components/Card';
 import {useThemeColor} from '../../hooks/useThemeColor';
 import {BarChart} from 'react-native-chart-kit';
 import { UserContext } from '../../context/UserContext';
+import { useNavigation } from '@react-navigation/native';
 
 const OverviewScreen = () => {
   const {user} = useContext(UserContext);
@@ -12,6 +13,8 @@ const OverviewScreen = () => {
   const {text, primary, background, success, warning, error} = useThemeColor();
 
   const screenWidth = Dimensions.get('window').width
+
+  const navigation = useNavigation();
 
   const data = {
     labels: ['Jan' , 'Feb' , 'March', 'Apr'],
@@ -27,11 +30,11 @@ const OverviewScreen = () => {
     decimalPlaces: 0, 
     color: (opacity = 1) => `rgba(98, 0, 238, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    fillShadowGradient: '#6200EE',        
-    fillShadowGradientOpacity: 1,  
+    fillShadowGradient: '#6200EE',
+    fillShadowGradientOpacity: 1,
     style: {
-      borderRadius: 16
-    }
+      borderRadius: 16,
+    },
   };
 
   return (
@@ -41,7 +44,9 @@ const OverviewScreen = () => {
           <Text style={[styles.greeting, {color: text}]}>Welcome back,</Text>
           <Text style={[styles.name, {color: text}]}>{user.name}</Text>
         </View>
-        <TouchableOpacity style={[styles.aiButton, {backgroundColor: primary}]}>
+        <TouchableOpacity
+            style={[styles.aiButton, {backgroundColor: primary}]}
+          onPress={() => navigation.navigate('AIAssistant')}>
           <MaterialCommunityIcons name="robot" size={20} color="white" />
           <Text style={styles.aiButtonText}>AI Assistant</Text>
         </TouchableOpacity>

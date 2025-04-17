@@ -1,4 +1,4 @@
-import React, { useState , useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -12,18 +12,22 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  Image, 
 } from 'react-native';
 
 import { getAuth, signInWithPhoneNumber } from '@react-native-firebase/auth';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { UserContext } from '../../context/UserContext';
 
+
+import Logo from '../../assets/fortura.png';
+
 const LoginScreen = ({ navigation }) => {
   const auth = getAuth();
 
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
-  const {setUser} = useContext(UserContext)
+  const { setUser } = useContext(UserContext);
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -59,8 +63,8 @@ const LoginScreen = ({ navigation }) => {
     try {
       await confirm.confirm(code);
 
-      setUser({name:name, phone:phone});
-      
+      setUser({ name: name, phone: phone });
+
       navigation.replace('Main', { name, phone });
     } catch (error) {
       console.log('❌ Invalid code:', error);
@@ -81,10 +85,14 @@ const LoginScreen = ({ navigation }) => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}
         >
-          <View style={styles.flexGrow} />
+          <View style={styles.flexGrow}>
+            {/* Logo Container */}
+            <View style={styles.logoContainer}>
+              <Image source={Logo} style={styles.logo} resizeMode="contain" />
+            </View>
+          </View>
 
           <View style={[styles.sheet, { backgroundColor: colors.card }]}>
-
             <Text style={[styles.title, { color: colors.text }]}>Login to continue</Text>
 
             {!confirm ? (
@@ -109,7 +117,7 @@ const LoginScreen = ({ navigation }) => {
                   placeholder="Enter phone number"
                   placeholderTextColor={colors.secondary}
                 />
-                
+
                 {/* Send OTP Button */}
                 <Pressable
                   style={[styles.button, { backgroundColor: colors.primary }]}
@@ -134,7 +142,7 @@ const LoginScreen = ({ navigation }) => {
                   placeholder="123456"
                   placeholderTextColor={colors.secondary}
                 />
-                
+
                 {/* Verify OTP Button */}
                 <Pressable
                   style={[styles.button, { backgroundColor: colors.primary }]}
@@ -167,6 +175,15 @@ const styles = StyleSheet.create({
   },
   flexGrow: {
     flexGrow: 1,
+    justifyContent: 'center', // Center the logo vertically
+    alignItems: 'center',     // Center the logo horizontally
+  },
+  logoContainer: {
+    marginBottom: 32, // Add some space between the logo and the login sheet
+  },
+  logo: {
+    width: 150, // Adjust the width as needed
+    height: 150, // Adjust the height as needed
   },
   sheet: {
     width: '100%',

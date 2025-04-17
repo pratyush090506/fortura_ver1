@@ -2,6 +2,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AIAssistantScreen from '../screens/overviewPage/AIAssistant';
+
 
 import { LoginScreen,OverviewScreen,PayScreen,BudgetScreen,InsightsScreen,ProfileNavigator } from '../screens';
 import { useThemeColor } from '../hooks/useThemeColor';
@@ -84,7 +86,7 @@ export default function AppNavigator() {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
-        
+          <Stack.Screen name="AIAssistant" component={AIAssistantScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
