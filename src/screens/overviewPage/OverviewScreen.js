@@ -7,21 +7,21 @@ import { UserContext } from '../../context/UserContext';
 import { useThemeColor } from '../../context/ThemeProvider';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
 
 const OverviewScreen = () => {
   const {user} = useContext(UserContext);
-  const {selectedCurrencySign} = useCurrency();
-  const {text, primary, background, success, warning, error,card} = useThemeColor();
+  const {selectedCurrencySign} = useCurrency();  const {text, primary, background, success, warning, error,card} = useThemeColor();
   const {t} = useTranslation();
-
-  const screenWidth = Dimensions.get('window').width
+  const screenWidth = Dimensions.get('window').width;
+  const navigation = useNavigation();
 
   const data = {
     labels: ['Jan' , 'Feb' , 'March', 'Apr'],
     datasets:[
       {data: [20000,45000,28000,80000],}
     ]
-  }
+  };
 
   const chartConfig = {
     backgroundColor: card,
@@ -33,8 +33,12 @@ const OverviewScreen = () => {
     fillShadowGradient: '#6200EE',        
     fillShadowGradientOpacity: 1,  
     style: {
-      borderRadius: 16
-    }
+      borderRadius: 16,
+    },
+  };
+
+  const handleAnalyzeInvestmentOptions = () => {
+    navigation.navigate('Invest');
   };
 
   return (
@@ -44,7 +48,9 @@ const OverviewScreen = () => {
           <Text style={[styles.greeting, {color: text}]}>{t('welcomeback')},</Text>
           <Text style={[styles.name, {color: text}]}>{user.name}</Text>
         </View>
-        <TouchableOpacity style={[styles.aiButton, {backgroundColor: primary}]}>
+        <TouchableOpacity
+          style={[styles.aiButton, {backgroundColor: primary}]}
+          onPress={() => navigation.navigate('AIAssistant')}>
           <MaterialCommunityIcons name="robot" size={20} color="white" />
           <Text style={styles.aiButtonText}>{t('aiass')}</Text>
         </TouchableOpacity>
@@ -151,7 +157,8 @@ const OverviewScreen = () => {
             {t('expandinvest')}
           </Text>
           <TouchableOpacity
-            style={[styles.actionButton, {backgroundColor: primary}]}>
+            style={[styles.actionButton, {backgroundColor: primary}]}
+            onPress={handleAnalyzeInvestmentOptions}> {/* Call the navigation function */}
             <Text style={styles.actionButtonText}>{t('analyseoptions')}</Text>
           </TouchableOpacity>
         </Card>
