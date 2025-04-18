@@ -9,6 +9,7 @@ const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/ge
 import { useTranslation } from 'react-i18next';
 
 export default function InsightsScreen() {
+  const { t } = useTranslation();
   const { text, background, primary, success, warning, error, secondary } = useThemeColor();
   const route = useRoute();
   const { budgetData } = route.params || { budgetData: null };
@@ -135,7 +136,7 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
   };
 
   const renderFormattedText = (text) => {
-    const parts = text.split(/(\*\*[^*]+\*\*)/g); // Split on bold parts
+    const parts = text.split(/(\*\*[^*]+\*\*)/g); 
     return parts.map((part, index) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         return (
@@ -152,8 +153,6 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
   return (
     <ScrollView style={[styles.container, { backgroundColor: background }]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: text }]}>AI Insights</Text>
-        <Text style={[styles.subtitle, { color: secondary }]}>Your Financial Health Report</Text>
         <Text style={[styles.title, { color: text }]}>{t('aiInsights')}</Text>
         <Text style={[styles.subtitle, { color: text }]}>{t('financialHealthReport')}</Text>
       </View>
@@ -170,7 +169,7 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
       {!loading && financialScore !== null && spendingAnalysis && recommendations.length > 0 ? (
         <>
           <Card style={styles.scoreCard}>
-            <Text style={styles.scoreLabel}>Financial Health Score</Text>
+            <Text style={[styles.scoreLabel , {color: text}]}>Financial Health Score</Text>
             <Text
               style={[
                 styles.scoreValue,
@@ -182,11 +181,11 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
             >
               {financialScore}
             </Text>
-            <Text style={styles.scoreTrend}>Based on AI analysis</Text>
+            <Text style={[styles.scoreTrend , {color: text}]}>Based on AI analysis</Text>
           </Card>
 
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: text }]}>Spending Analysis</Text>
+            <Text style={[styles.sectionTitle, { color: text }]}>{t('spendingAnalysis')}</Text>
             <Card style={styles.chartCard}>
               {Object.entries(spendingAnalysis).map(([label, value]) => (
                 <View key={label} style={styles.spendingItem}>
@@ -215,15 +214,15 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
           </View>
 
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: text }]}>AI Recommendations</Text>
+            <Text style={[styles.sectionTitle, { color: text }]}>{t('aiRecommendations')}</Text>
             {recommendations.map((rec, idx) => (
               <Card key={idx} style={styles.recommendationCard}>
                 <View style={styles.recommendationHeader}>
                   <Text style={[styles.recommendationTitle, { color: primary }]}>
-                    💡 Recommendation {idx + 1}
+                    💡 {t('recommendation')} {idx + 1}
                   </Text>
                 </View>
-                <Text style={styles.recommendationText}>{renderFormattedText(rec)}</Text>
+                <Text style={[styles.recommendationText , {color: text}]}>{renderFormattedText(rec)}</Text>
               </Card>
             ))}
           </View>

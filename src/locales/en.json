@@ -8,8 +8,10 @@
     "language": "Language",
     "logOut": "Log Out",
     "login": "Login",
+    "recommendation": "Recommendation",
     "darkMode": "Dark Mode",
-  
+    "saveBudget": "Save Budget",
+    "fetchingInsights": "Fetching insights",
     "nameRequiredTitle": "Name Required",
     "nameRequiredMessage": "Please enter your name.",
     "phoneRequired": "Invalid Phone Number",
@@ -19,7 +21,14 @@
     "invalidOTP": "Invalid OTP",
     "invalidOTPMsg": "The OTP you entered is incorrect.",
     "loginToContinue": "Login to continue",
-  
+    "editmonthlybudget": "Edit Monthly Budget",
+    "spendingbreakdown": "Spending Breakdown",
+
+    "yourAge": "Your Age",
+    "dreamFuturePlans": "Your Future Plans",
+    "annualIncome": "Annual Income",
+    "investmentAnalysis": "Investment Analysis",
+
     "aiInsights": "AI Insights",
     "financialHealthReport": "Your Financial Health Report",
     "financialHealthScore": "Financial Health Score",
@@ -89,6 +98,7 @@
     "Leisure": "Leisure",
     "Other": "Other",
 
-    "aiass" : "AI Assistant"
+    "aiass" : "AI Assistant",
+    "analyze": "Analyze"
   }
   

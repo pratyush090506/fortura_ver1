@@ -12,10 +12,12 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
+import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { Card } from '../../components/Card';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTranslation } from 'react-i18next';
 
 const Invest = () => {
   const theme = {
@@ -30,6 +32,8 @@ const Invest = () => {
     warning: '#FDCB6E',
     error: '#FF7675',
   };
+
+  const { t } = useTranslation();
   const { text, primary } = theme;
   const [age, setAge] = useState('');
   const [futurePlans, setFuturePlans] = useState('');
@@ -37,9 +41,9 @@ const Invest = () => {
   const [loading, setLoading] = useState(false);
   const [investmentPoints, setInvestmentPoints] = useState([]);
   const navigation = useNavigation();
-//   const language = 'Odia';
+  const { language } = useLanguage();
+
   const handleGetInvestmentOptions = async () => {
-    
     if (!age || !futurePlans || !income) {
       alert('Please answer all the questions.');
       return;
@@ -48,12 +52,49 @@ const Invest = () => {
     setLoading(true);
     setInvestmentPoints([]);
 
-    const prompt = `Hey smart investor! Based on your details:
+    let prompt = `Hey smart investor! Based on your details:
     Age: ${age}
     Future Goals: ${futurePlans}
     Annual Income: ₹${income}
 
     Give me 2-3 super interesting and concise investment ideas as bullet points. Make them sound exciting and easy to grasp. For each idea, briefly explain why it could be a good fit, and make sure to **bold** the key investment terms like this. Format it nicely for reading!`;
+
+    if (language === 'or') {
+      prompt = `ହେ ସ୍ମାର୍ଟ ନିବେଶକ! ଆପଣଙ୍କ ବିବରଣୀ ଆଧାରରେ:
+      ବୟସ: ${age}
+      ଭବିଷ୍ୟତର ଯୋଜନା: ${futurePlans}
+      ବାର୍ଷିକ ଆୟ: ₹${income}
+
+      ମୋତେ ୨-୩ ଟି ସୁପର ମଜାଦାର ଏବଂ ସଂକ୍ଷିପ୍ତ ନିବେଶ ଧାରଣା ବୁଲେଟ ପଏଣ୍ଟରେ ଦିଅନ୍ତୁ। ସେଗୁଡ଼ିକୁ ରୋମାଞ୍ଚକର ଏବଂ ବୁଝିବା ସହଜ ହେବା ଉଚିତ୍। ପ୍ରତ୍ୟେକ ଧାରଣା ପାଇଁ, ଏହା କାହିଁକି ଉପଯୁକ୍ତ ହୋଇପାରେ ସେ ବିଷୟରେ ସଂକ୍ଷିପ୍ତରେ ବର୍ଣ୍ଣନା କରନ୍ତୁ, ଏବଂ ନିଶ୍ଚିତ କରନ୍ତୁ ଯେ **ମୁଖ୍ୟ ନିବେଶ ଶବ୍ଦଗୁଡ଼ିକୁ** ଏହିପରି ବୋଲ୍ଡ କରନ୍ତୁ। ପଢିବା ପାଇଁ ଏହାକୁ ସୁନ୍ଦର ଭାବରେ ଫର୍ମାଟ୍ କରନ୍ତୁ!`;
+    } else if (language === 'hi') {
+      prompt = `हे स्मार्ट निवेशक! आपकी डिटेल्स के आधार पर:
+      उम्र: ${age}
+      भविष्य के लक्ष्य: ${futurePlans}
+      वार्षिक आय: ₹${income}
+
+      मुझे 2-3 सुपर दिलचस्प और संक्षिप्त निवेश विचार बुलेट पॉइंट्स में दें। उन्हें रोमांचक और समझने में आसान बनाएं। प्रत्येक विचार के लिए, संक्षेप में बताएं कि यह क्यों एक अच्छा विकल्प हो सकता है, और **मुख्य निवेश शब्दों** को इस तरह बोल्ड करना सुनिश्चित करें। इसे पढ़ने के लिए अच्छी तरह से फॉर्मेट करें!`;
+    } else if (language === 'bn') {
+      prompt = `হে স্মার্ট বিনিয়োগকারী! আপনার বিবরণের উপর ভিত্তি করে:
+      বয়স: ${age}
+      ভবিষ্যতের পরিকল্পনা: ${futurePlans}
+      বার্ষিক আয়: ₹${income}
+
+      আমাকে 2-3 টি সুপার আকর্ষণীয় এবং সংক্ষিপ্ত বিনিয়োগের ধারণা বুলেট পয়েন্টে দিন। সেগুলোকে উত্তেজনাপূর্ণ এবং সহজে বোধগম্য করে তুলুন। প্রতিটি ধারণার জন্য, সংক্ষেপে ব্যাখ্যা করুন কেন এটি একটি ভাল বিকল্প হতে পারে, এবং **মূল বিনিয়োগ শব্দ** গুলোকে এভাবে মোটা করে লিখুন। এটিকে সুন্দরভাবে পড়ার জন্য ফরম্যাট করুন!`;
+    } else if (language === 'kn') {
+      prompt = `ಹೇ ಬುದ್ಧಿವಂತ ಹೂಡಿಕೆದಾರ! ನಿಮ್ಮ ವಿವರಗಳ ಆಧಾರದ ಮೇಲೆ:
+      ವಯಸ್ಸು: ${age}
+      ಭವಿಷ್ಯದ ಯೋಜನೆಗಳು: ${futurePlans}
+      ವಾರ್ಷಿಕ ಆದಾಯ: ₹${income}
+
+      ನನಗೆ 2-3 ಸೂಪರ್ ಆಸಕ್ತಿದಾಯಕ ಮತ್ತು ಸಂಕ್ಷಿಪ್ತ ಹೂಡಿಕೆ ಕಲ್ಪನೆಗಳನ್ನು ಬುಲೆಟ್ ಪಾಯಿಂಟ್‌ಗಳಲ್ಲಿ ನೀಡಿ. ಅವು ರೋಮಾಂಚಕ ಮತ್ತು ಗ್ರಹಿಸಲು ಸುಲಭವಾಗಿರಬೇಕು. ಪ್ರತಿ ಕಲ್ಪನೆಗೆ, ಅದು ಏಕೆ ಉತ್ತಮ ಆಯ್ಕೆಯಾಗಬಹುದು ಎಂಬುದನ್ನು ಸಂಕ್ಷಿಪ್ತವಾಗಿ ವಿವರಿಸಿ, ಮತ್ತು **ಮುಖ್ಯ ಹೂಡಿಕೆ ಪದಗಳನ್ನು** ಈ ರೀತಿ ದಪ್ಪಗಾಗಿಸಲು ಮರೆಯದಿರಿ. ಓದಲು ಸುಂದರವಾಗಿ ಫಾರ್ಮ್ಯಾಟ್ ಮಾಡಿ!`;
+    } else if (language === 'pa') {
+      prompt = `ਹੇ ਸਮਾਰਟ ਨਿਵੇਸ਼ਕ! ਤੁਹਾਡੇ ਵੇਰਵਿਆਂ ਦੇ ਆਧਾਰ 'ਤੇ:
+      ਉਮਰ: ${age}
+      ਭਵਿੱਖ ਦੀਆਂ ਯੋਜਨਾਵਾਂ: ${futurePlans}
+      ਸਾਲਾਨਾ ਆਮਦਨ: ₹${income}
+
+      ਮੈਨੂੰ 2-3 ਸੁਪਰ ਦਿਲਚਸਪ ਅਤੇ ਸੰਖੇਪ ਨਿਵੇਸ਼ ਵਿਚਾਰ ਬੁਲੇਟ ਪੁਆਇੰਟਾਂ ਵਿੱਚ ਦਿਓ। ਉਹਨਾਂ ਨੂੰ ਦਿਲਚਸਪ ਅਤੇ ਸਮਝਣ ਵਿੱਚ ਆਸਾਨ ਬਣਾਉ। ਹਰੇਕ ਵਿਚਾਰ ਲਈ, ਸੰਖੇਪ ਵਿੱਚ ਦੱਸੋ ਕਿ ਇਹ ਇੱਕ ਵਧੀਆ ਵਿਕਲਪ ਕਿਉਂ ਹੋ ਸਕਦਾ ਹੈ, ਅਤੇ **ਮੁੱਖ ਨਿਵੇਸ਼ ਸ਼ਬਦਾਂ** ਨੂੰ ਇਸ ਤਰ੍ਹਾਂ ਬੋਲਡ ਕਰਨਾ ਯਕੀਨੀ ਬਣਾਓ। ਇਸਨੂੰ ਪੜ੍ਹਨ ਲਈ ਵਧੀਆ ਢੰਗ ਨਾਲ ਫਾਰਮੈਟ ਕਰੋ!`;
+    }
 
     try {
       const response = await axios.post(
@@ -105,7 +146,7 @@ const Invest = () => {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.header}>
             <Text style={[styles.title, { color: text }]}>
-              <MaterialCommunityIcons name="arrow-top-right" size={28} color={primary} /> Investment Analysis
+              <MaterialCommunityIcons name="arrow-top-right" size={28} color={primary} /> {t('investmentAnalysis')}
             </Text>
             <Text style={[styles.subtitle, { color: text + '80', textAlign: 'center' }]}>
               Unleash the potential of your money with these insights.
@@ -113,7 +154,7 @@ const Invest = () => {
           </View>
 
           <Card style={[styles.inputCard, { backgroundColor: theme.card }]}>
-            <Text style={[styles.label, { color: text }]}>Your Age:</Text>
+            <Text style={[styles.label, { color: text }]}>{t('yourAge')}</Text>
             <TextInput
               style={[styles.input, { borderColor: theme.border, color: text }]}
               value={age}
@@ -123,7 +164,7 @@ const Invest = () => {
               placeholderTextColor={theme.secondary}
             />
 
-            <Text style={[styles.label, { color: text }]}>Dream Future Plans:</Text>
+            <Text style={[styles.label, { color: text }]}>{t('dreamFuturePlans')}</Text>
             <TextInput
               style={[styles.inputMultiline, { borderColor: theme.border, color: text }]}
               value={futurePlans}
@@ -133,7 +174,7 @@ const Invest = () => {
               multiline
             />
 
-            <Text style={[styles.label, { color: text }]}>Your Annual Income (₹):</Text>
+            <Text style={[styles.label, { color: text }]}>{t('annualIncome')} (₹):</Text>
             <TextInput
               style={[styles.input, { borderColor: theme.border, color: text }]}
               value={income}
@@ -154,7 +195,7 @@ const Invest = () => {
                 ) : (
                   <>
                     <MaterialCommunityIcons name="lightbulb-on" size={20} color={theme.background} style={{ marginRight: 8 }} />
-                    Analyze
+                    {t('analyze')}
                   </>
                 )}
               </Text>

@@ -9,8 +9,10 @@
     "logOut": "लॉग आउट",
     "login": "लॉगिन",
     "darkMode": "डार्क मोड",
-  
-    "nameRequiredTitle": "नाम आवश्यक",
+    "recommendation": "अनुशोध",
+    "saveBudget":"बजेट सहेजें",
+    "fetchingInsights": "अंतर्दृष्टियाँ लोड हो रही हैं",
+    "nameRequiredTitle": "नाम आवश्यक है",
     "nameRequiredMessage": "कृपया अपना नाम दर्ज करें।",
     "phoneRequired": "अमान्य फोन नंबर",
     "phoneRequiredMessage": "कृपया 10 अंकों का सही नंबर दर्ज करें।",
@@ -19,7 +21,13 @@
     "invalidOTP": "अमान्य ओटीपी",
     "invalidOTPMsg": "आपके द्वारा दर्ज किया गया ओटीपी गलत है।",
     "loginToContinue": "जारी रखने के लिए लॉगिन करें",
-  
+
+    "editMonthlyBudget": "मासिक बजेट बदलें",
+    "spendingBreakdown": "खर्च ब्रेकडाउन",
+    "yourAge": "आपकी उम्र",
+    "dreamFuturePlans": "आपकी सपने की योजनाएं",
+    "annualIncome": "वार्षिक आय",
+    "investmentAnalysis": "निवेश विश्लेषण",
     "aiInsights": "एआई अंतर्दृष्टि",
     "financialHealthReport": "आपकी वित्तीय स्थिति रिपोर्ट",
     "financialHealthScore": "वित्तीय स्वास्थ्य स्कोर",
@@ -89,6 +97,7 @@
     "Leisure": "मनोरंजन",
     "Other": "अन्य",
 
-    "aiass": "एआई असिस्टेंट"
+    "aiass": "एआई असिस्टेंट",
+    "analyze": "विश्लेषण करें"
   }
   

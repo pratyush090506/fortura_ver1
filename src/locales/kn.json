@@ -9,7 +9,14 @@
     "logOut": "ಲಾಗ್ ಔಟ್",
     "login": "ಲಾಗಿನ್",
     "darkMode": "ಡಾರ್ಕ್ ಮೋಡ್",
-  
+
+    "yourAge": "ನಿಮ್ಮ ವಯಸ್ಸು",
+    "dreamFuturePlans": "ನಿಮ್ಮ ಸ್ವಪ್ನ ಭವಿಷ್ಯದ ಯೋಜನೆಗಳು",
+    "annualIncome": "ವಾರ್ಷಿಕ ಆದಾಯ",
+    "recommendation": "ಸಿಫಾರ್ಸ್",
+    "saveBudget": "ಬಜೆಟ್‌ಗಳನ್ನು ಸೇವ್",
+    "investmentAnalysis": "ನಿವೆಶ ವಿಶ್ಲೇಷಣೆ",
+    "fetchingInsights": "ಅಂತರ್ದೃಷ್ಟಿಗಳನ್ನು ಪಡೆಯುತ್ತಿದೆ",
     "nameRequiredTitle": "ಹೆಸರು ಅಗತ್ಯವಿದೆ",
     "nameRequiredMessage": "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.",
     "phoneRequired": "ಅಮಾನ್ಯ ದೂರವಾಣಿ ಸಂಖ್ಯೆ",
@@ -19,6 +26,9 @@
     "invalidOTP": "ಅಮಾನ್ಯ OTP",
     "invalidOTPMsg": "ನೀವು ನಮೂದಿಸಿದ OTP ತಪ್ಪಾಗಿದೆ.",
     "loginToContinue": "ಮುಂದುವರಿಸಲು ಲಾಗಿನ್ ಮಾಡಿ",
+
+    "editmonthlybudget" :"ಮಾಸಿಕ ಬಜೆಟ್ ಸಂಪಾದಿಸಿ",
+    "spendingbreakdown" :"ಖರ್ಚು ವಿಶ್ಲೇಷಣೆ",
   
     "aiInsights": "AI ತಿಳಿವಳಿಕೆ",
     "financialHealthReport": "ನಿಮ್ಮ ಆರ್ಥಿಕ ಆರೋಗ್ಯ ವರದಿ",
@@ -89,6 +99,8 @@
     "Leisure": "ವಿಹಾರ",
     "Other": "ಇತರೆ",
 
-    "aiass": "ಎಐ ಸಹಾಯಕ"
+    "aiass": "ಎಐ ಸಹಾಯಕ",
+
+    "analyze": "ವಿಶ್ಲೇಷಣೆ ಮಾಡಿ"
   }
   

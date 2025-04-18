@@ -7,22 +7,24 @@ import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 const BUDGET_STORAGE_KEY = 'userBudgetData';
-const initialBudget = {
-  total: '5000.00',
-  spent: '3240.50',
-  categories: [
-    { name: 'Food & Dining', budgeted: '1000.00', spent: '800.00' },
-    { name: 'Transportation', budgeted: '500.00', spent: '300.00' },
-    { name: 'Entertainment', budgeted: '1500.00', spent: '450.00' },
-    { name: 'Utilities', budgeted: '300.00', spent: '250.00' },
-    { name: 'Shopping', budgeted: '700.00', spent: '500.00' },
-  ],
-};
+
 import { useThemeColor } from '../../context/ThemeProvider';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useTranslation } from 'react-i18next';
 
 export default function BudgetScreen() {
+  const { t } = useTranslation();
+  const initialBudget = {
+    total: '5000.00',
+    spent: '3240.50',
+    categories: [
+      { name: t('foodDining'), budgeted: '1200.00', spent: '900.00' },
+      { name: t('transportation'), budgeted: '600.00', spent: '350.00' },
+      { name: t('entertainment'), budgeted: '1600.00', spent: '500.00' },
+      { name: t('utilities'), budgeted: '400.00', spent: '300.00' },
+      { name: t('shopping'), budgeted: '800.00', spent: '550.00' },
+    ],
+  };
   const {selectedCurrencySign} = useCurrency();
   const { text, background, primary, warning, error, secondary ,card} = useThemeColor();
   const screenWidth = Dimensions.get('window').width;
@@ -119,7 +121,7 @@ export default function BudgetScreen() {
     <View style={[styles.container, { backgroundColor: background, flex: 1 }]}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: text }]}>Edit Monthly Budget</Text>
+          <Text style={[styles.title, { color: text }]}>{t('editmonthlybudget')}</Text>
           <Text style={[styles.subtitle, { color: secondary }]}>April 2025</Text>
         </View>
 
@@ -153,7 +155,7 @@ export default function BudgetScreen() {
         </Card>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: text }]}>Spending Breakdown</Text>
+          <Text style={[styles.sectionTitle, { color: text }]}>{t('spendingbreakdown')}</Text>
           <Card style={styles.chartCard}>
             <BarChart
               data={chartData}
@@ -168,7 +170,7 @@ export default function BudgetScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: text }]}>Categories</Text>
+          <Text style={[styles.sectionTitle, { color: text }]}>{t('categories')}</Text>
           {budgetData.categories.map((category, index) => (
             <Card style={styles.categoryCard} key={index}>
               <View style={styles.categoryHeader}>
@@ -212,7 +214,7 @@ export default function BudgetScreen() {
 
       <TouchableOpacity style={[styles.saveButton, { backgroundColor: primary }]} onPress={handleSaveBudget}>
         <Icon name="check" size={24} color="white" />
-        <Text style={styles.saveButtonText}>Save Budget</Text>
+        <Text style={styles.saveButtonText}>{t('saveBudget')}</Text>
       </TouchableOpacity>
     </View>
   );

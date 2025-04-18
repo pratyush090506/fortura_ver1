@@ -10,6 +10,11 @@
     "login": "ଲଗଇନ୍",
     "darkMode": "ଡାର୍କ୍ ମୋଡ୍",
   
+    "fetchingInsights": "ଇନ୍ସାଇଟ୍ସ୍ ପାଇଁ ଅପେକ୍ଷା",
+    "recommendation": "ପରାମର୍ଶ",
+    "saveBudget":"ସେଟ୍ ବଜେଟ୍",
+
+
     "nameRequiredTitle": "ନାମ ଆବଶ୍ୟକ",
     "nameRequiredMessage": "ଦୟାକରି ଆପଣଙ୍କର ନାମ ଦିଅନ୍ତୁ।",
     "phoneRequired": "ଅବୈଧ ଫୋନ୍ ନମ୍ବର",
@@ -31,7 +36,9 @@
     "investmentTiming": "ନିବେଶ ସମୟ",
     "mediumImpact": "ମଧ୍ୟମ ପ୍ରଭାବ",
     "riskAlert": "ଜୋଖିମ ସତର୍କତା",
-  
+    "editmonthlybudget" :"ମାସିକ ବଜେଟ୍ ପରିବର୍ତ୍ତନ କରନ୍ତୁ",
+    "spendingbreakdown" :"ଖର୍ଚ୍ଚ ବିଶ୍ଳେଷଣ",
+
     "suggestionStreaming": "ଆପଣ ସ୍ଟ୍ରିମିଂ ସବସ୍କ୍ରିପସନ୍ ଗୁଡ଼ିକୁ ଏକତ୍ର କରି ମାସକୁ ₹150 ବଞ୍ଚାଇପାରିବେ। ଆମ ପ୍ରସ୍ତାବିତ ବଣ୍ଡଲ୍ ବିକଳ୍ପଗୁଡ଼ିକୁ ଭାବନ୍ତୁ।",
     "suggestionInvestment": "ବଜାର ପରିସ୍ଥିତି ଦର୍ଶାଉଛି ଯେ ଏହା ଅପଣଙ୍କର ଷ୍ଟକ୍ ପୋର୍ଟଫୋଲିଓ ବଢ଼ାଇବା ପାଇଁ ଭଲ ସମୟ। ଆମେ ଇଣ୍ଡେକ୍ସ ଫଣ୍ଡ୍‌ରେ ଅଧିକ ନିବେଶ କରିବାକୁ ପରାମର୍ଶ ଦେଉଛୁ।",
     "suggestionEmergency": "ଆପଣଙ୍କର ଆପତ୍କାଳୀନ ତହବିଲ୍ ଅନୁଶଂସିତ ୬ ମାସର କଭରେଜ୍‌ରୁ କମ୍। ଅଧିକ ସଞ୍ଚୟ ପାଇଁ ଧ୍ୟାନ ଦିଅନ୍ତୁ।",
@@ -54,6 +61,11 @@
     "transportation": "ପରିବହନ",
     "shopping": "କିଣାକାଟା",
     "ThemeSettings" : "ଥିମ୍ ସେଟିଂସ୍",
+
+    "yourage": "ଆପଣଙ୍କ ବୟସ୍",
+    "dreamFuturePlans": "ଆପଣଙ୍କ ଆଗାମୀ ପରିକଳ୍ପନା",
+    "annualIncome": "ବାର୍ଷିକ ଆୟ",
+    "investmentAnalysis": "ନିବେଶ ବିଶ୍ଳେଷଣ",
 
     "EditProfile": "ପ୍ରୋଫାଇଲ୍ ସେଟିଂସ୍",
     "NotificationSettings": "ବିଜ୍ଞପ୍ତି ସେଟିଂସ୍",
@@ -89,6 +101,8 @@
     "Leisure": "ଅବସର",
     "Other": "ଅନ୍ୟାନ୍ୟ",
 
-    "aiass": "ଏଆଇ ସହାୟକ"
+    "aiass": "ଏଆଇ ସହାୟକ",
+
+    "analyze": "ବିଶ୍ଳେଷଣ କରନ୍ତୁ"
   }
   

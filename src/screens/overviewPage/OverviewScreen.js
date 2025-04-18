@@ -79,11 +79,6 @@ const OverviewScreen = () => {
           <Text style={[styles.sectionTitle, {color: text}]}>
             {t('cashflow')}
           </Text>
-          <TouchableOpacity style={styles.moreButton}>
-            <Text style={[styles.moreButtonText, {color: primary}]}>
-              {t('details')}
-            </Text>
-          </TouchableOpacity>
         </View>
 
         <Card>
@@ -122,26 +117,6 @@ const OverviewScreen = () => {
           {t('aiinsights')}
         </Text>
 
-        <Card style={[styles.insightCard, {borderLeftColor: success}]}>
-          <View style={styles.insightHeader}>
-            <MaterialCommunityIcons
-              name="lightbulb-on"
-              size={24}
-              color={success}
-            />
-            <Text style={[styles.insightTitle, {color: success}]}>
-              {t('costsaving')}
-            </Text>
-          </View>
-          <Text style={[styles.insightText , {color:text}]}>
-            {t('deals')}
-          </Text>
-          <TouchableOpacity
-            style={[styles.actionButton, {backgroundColor: success}]}>
-            <Text style={styles.actionButtonText}>{t('viewdetails')}</Text>
-          </TouchableOpacity>
-        </Card>
-
         <Card style={[styles.insightCard, {borderLeftColor: primary}]}>
           <View style={styles.insightHeader}>
             <MaterialCommunityIcons
@@ -160,22 +135,6 @@ const OverviewScreen = () => {
             style={[styles.actionButton, {backgroundColor: primary}]}
             onPress={handleAnalyzeInvestmentOptions}> {/* Call the navigation function */}
             <Text style={styles.actionButtonText}>{t('analyseoptions')}</Text>
-          </TouchableOpacity>
-        </Card>
-
-        <Card style={[styles.insightCard, {borderLeftColor: error}]}>
-          <View style={styles.insightHeader}>
-            <MaterialCommunityIcons name="alert" size={24} color={error} />
-            <Text style={[styles.insightTitle, {color: error}]}>
-              {t('riskalert')}
-            </Text>
-          </View>
-          <Text style={[styles.insightText , {color:text}]}>
-            {t('vendor')}
-          </Text>
-          <TouchableOpacity
-            style={[styles.actionButton, {backgroundColor: error}]}>
-            <Text style={styles.actionButtonText}>{t('optsch')}</Text>
           </TouchableOpacity>
         </Card>
       </View>

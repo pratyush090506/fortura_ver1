@@ -10,6 +10,9 @@
     "login": "ਲੌਗਇਨ",
     "darkMode": "ਡਾਰਕ ਮੋਡ",
   
+
+    "fetchingInsights": "ਇਨਸਾਈਟਸ ਪਾਇਆ ਅਪੇਕਸ਼ਾ",
+
     "nameRequiredTitle": "ਨਾਂ ਲਾਜ਼ਮੀ ਹੈ",
     "nameRequiredMessage": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਨਾਂ ਦਰਜ ਕਰੋ।",
     "phoneRequired": "ਗਲਤ ਫ਼ੋਨ ਨੰਬਰ",
@@ -19,7 +22,14 @@
     "invalidOTP": "ਗਲਤ OTP",
     "invalidOTPMsg": "ਤੁਹਾਡਾ ਦਰਜ ਕੀਤਾ OTP ਗਲਤ ਹੈ।",
     "loginToContinue": "ਜਾਰੀ ਰੱਖਣ ਲਈ ਲੌਗਇਨ ਕਰੋ",
-  
+
+    "editmonthlybudget": "ਮਾਸਿਕ ਬਜਟ ਸੰਪਾਦਿਤ ਕਰੋ",
+    "spendingbreakdown": "ਖਰਚਦੀ ਵਿਸ਼ਲੇਸ਼ਣ",
+
+    "yourAge": "ਤੁਹਾਡੀ ਉਮਰ",
+    "dreamFuturePlans": "ਤੁਹਾਡੀ ਸਪਨੇ ਦੀ ਯੋਜਨਾ",
+    "annualIncome": "ਸਾਲਾਨਾ ਆਮਦਨ",
+    "investmentAnalysis": "ਨਿਵੇਸ਼ ਵਿਸ਼ਲੇਸ਼ਣ",
     "aiInsights": "AI ਝਾਤ",
     "financialHealthReport": "ਤੁਹਾਡੀ ਵਿੱਤੀ ਸਿਹਤ ਰਿਪੋਰਟ",
     "financialHealthScore": "ਵਿੱਤੀ ਸਿਹਤ ਸਕੋਰ",
@@ -89,6 +99,9 @@
     "Leisure": "ਮਨੋਰੰਜਨ",
     "Other": "ਹੋਰ",
 
-    "aiass": "ਏਆਈ ਸਹਾਇਕ"
+    "aiass": "ਏਆਈ ਸਹਾਇਕ",
+
+    "recommendation": "ਸਿਫ਼ਾਰਸ਼ਾਂ",
+    "analyze": "ਵਿਸ਼ਲੇਸ਼ਣ ਕਰੋ"
   }
   

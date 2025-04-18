@@ -9,6 +9,9 @@
     "logOut": "লগ আউট",
     "login": "লগইন",
     "darkMode": "ডার্ক মোড",
+    "fetchingInsights": "ইন্সাইটস পাওয়া হচ্ছে",
+    "recommendation": "সীমা",
+    "saveBudget": "বাজেট সেভ করুন",
   
     "nameRequiredTitle": "নাম প্রয়োজন",
     "nameRequiredMessage": "অনুগ্রহ করে আপনার নাম লিখুন।",
@@ -54,6 +57,16 @@
     "transportation": "পরিবহন",
     "shopping": "কেনাকাটা",
     "ThemeSettings" : "থিম সেটিংস" ,
+    "utilities": "ইউটিলিটিস",
+    "entertainment": "বিনোদন",
+    "yourfinancialhealthreport":"আপনার বাজারের স্বাস্থ্য প্রতিবেদন",
+    "editmonthlybudget":"মাসিক বাজেট পরিবর্তন করুন",
+    "spendingbreakdown":"ব্যয়ের ব্রেকডাউন",
+    "investmentAnalysis":"বিনিয়োগের পরীক্ষা",
+    "yourage": "আপনার বয়স",
+    "dreamFuturePlans": "আপনার দ্রুত পরিকল্প",
+    "annualIncome": "বার্ষিক আয়",
+
 
     "EditProfile": "প্রোফাইল সেটিংস",
     "NotificationSettings": "নোটিফিকেশন সেটিংস",
@@ -89,8 +102,8 @@
     "Leisure": "অবসর",
     "Other": "অন্যান্য",
 
-    "aiass": "এআই সহকারী"
+    "aiass": "এআই সহকারী",
 
-  
+    "analyze": "বিশ্লেষণ করুন"
   }
   
