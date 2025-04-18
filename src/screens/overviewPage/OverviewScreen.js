@@ -2,14 +2,17 @@ import {useState, useEffect, useContext} from 'react';
 import {StyleSheet,View,Text,ScrollView,TouchableOpacity,Platform,Dimensions} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Card} from '../../components/Card';
-import {useThemeColor} from '../../hooks/useThemeColor';
 import {BarChart} from 'react-native-chart-kit';
 import { UserContext } from '../../context/UserContext';
+import { useThemeColor } from '../../context/ThemeProvider';
+import { useCurrency } from '../../context/CurrencyContext';
+import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 
 const OverviewScreen = () => {
   const {user} = useContext(UserContext);
-  const {text, primary, background, success, warning, error} = useThemeColor();
+  const {selectedCurrencySign} = useCurrency();  const {text, primary, background, success, warning, error,card} = useThemeColor();
+  const {t} = useTranslation();
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
 
@@ -21,14 +24,14 @@ const OverviewScreen = () => {
   };
 
   const chartConfig = {
-    backgroundColor: '#ffffff',
-    backgroundGradientFrom: '#ffffff',
-    backgroundGradientTo: '#ffffff',
-    decimalPlaces: 0,
+    backgroundColor: card,
+    backgroundGradientFrom: card,
+    backgroundGradientTo: card,
+    decimalPlaces: 0, 
     color: (opacity = 1) => `rgba(98, 0, 238, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    fillShadowGradient: '#6200EE',
-    fillShadowGradientOpacity: 1,
+    labelColor: (opacity = 1) => text,
+    fillShadowGradient: '#6200EE',        
+    fillShadowGradientOpacity: 1,  
     style: {
       borderRadius: 16,
     },
@@ -42,22 +45,22 @@ const OverviewScreen = () => {
     <ScrollView style={[styles.container, {backgroundColor: background}]}>
       <View style={styles.header}>
         <View>
-          <Text style={[styles.greeting, {color: text}]}>Welcome back,</Text>
+          <Text style={[styles.greeting, {color: text}]}>{t('welcomeback')},</Text>
           <Text style={[styles.name, {color: text}]}>{user.name}</Text>
         </View>
         <TouchableOpacity
           style={[styles.aiButton, {backgroundColor: primary}]}
           onPress={() => navigation.navigate('AIAssistant')}>
           <MaterialCommunityIcons name="robot" size={20} color="white" />
-          <Text style={styles.aiButtonText}>AI Assistant</Text>
+          <Text style={styles.aiButtonText}>{t('aiass')}</Text>
         </TouchableOpacity>
       </View>
 
       <Card style={styles.balanceCard}>
-        <Text style={styles.balanceLabel}>Total Balance</Text>
-        <Text style={styles.balanceAmount}>₹84,532.00</Text>
+        <Text style={[styles.balanceLabel, {color: text}]}>{t('Total Balance')}</Text>
+        <Text style={[styles.balanceAmount, {color: text}]}>{selectedCurrencySign}84,532.00</Text>
         <Text style={[styles.trend, {color: success}]}>
-          ↑ 2.3% from last month
+          ↑ {t('up')}
         </Text>
         <View style={styles.aiInsightBadge}>
           <MaterialCommunityIcons
@@ -66,7 +69,7 @@ const OverviewScreen = () => {
             color={success}
           />
           <Text style={[styles.aiInsightText, {color: success}]}>
-            Positive cash flow trend detected
+            {t('positivecashflow')}
           </Text>
         </View>
       </Card>
@@ -74,18 +77,18 @@ const OverviewScreen = () => {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, {color: text}]}>
-            Cash Flow Forecast
+            {t('cashflow')}
           </Text>
           <TouchableOpacity style={styles.moreButton}>
             <Text style={[styles.moreButtonText, {color: primary}]}>
-              Details
+              {t('details')}
             </Text>
           </TouchableOpacity>
         </View>
 
         <Card>
           <View style={{ padding: 16 }}>
-            <Text style={{ fontSize: 18, marginBottom: 10, fontWeight: 'bold' }}>Monthly expenses</Text>
+            <Text style={{ fontSize: 18, marginBottom: 10, fontWeight: 'bold' , color: text }}>{t('monthlyexpenses')}</Text>
             <BarChart
             data={data}
             height={220}
@@ -108,8 +111,7 @@ const OverviewScreen = () => {
               color={warning}
             />
             <Text style={[styles.aiAlertText, {color: warning}]}>
-              Potential cash flow dip predicted in August. Consider adjusting
-              expenses.
+              {t('cashflowdip')}
             </Text>
           </View>
         </Card>
@@ -117,8 +119,28 @@ const OverviewScreen = () => {
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, {color: text}]}>
-          AI Optimization Insights
+          {t('aiinsights')}
         </Text>
+
+        <Card style={[styles.insightCard, {borderLeftColor: success}]}>
+          <View style={styles.insightHeader}>
+            <MaterialCommunityIcons
+              name="lightbulb-on"
+              size={24}
+              color={success}
+            />
+            <Text style={[styles.insightTitle, {color: success}]}>
+              {t('costsaving')}
+            </Text>
+          </View>
+          <Text style={[styles.insightText , {color:text}]}>
+            {t('deals')}
+          </Text>
+          <TouchableOpacity
+            style={[styles.actionButton, {backgroundColor: success}]}>
+            <Text style={styles.actionButtonText}>{t('viewdetails')}</Text>
+          </TouchableOpacity>
+        </Card>
 
         <Card style={[styles.insightCard, {borderLeftColor: primary}]}>
           <View style={styles.insightHeader}>
@@ -128,17 +150,32 @@ const OverviewScreen = () => {
               color={primary}
             />
             <Text style={[styles.insightTitle, {color: primary}]}>
-              Investment Opportunity
+              {t('invest')}
             </Text>
           </View>
-          <Text style={styles.insightText}>
-            Market conditions favorable for expanding investment portfolio.
-            Expected ROI: 12-15%
+          <Text style={[styles.insightText , {color:text}]}>
+            {t('expandinvest')}
           </Text>
           <TouchableOpacity
             style={[styles.actionButton, {backgroundColor: primary}]}
             onPress={handleAnalyzeInvestmentOptions}> {/* Call the navigation function */}
-            <Text style={styles.actionButtonText}>Analyze Options</Text>
+            <Text style={styles.actionButtonText}>{t('analyseoptions')}</Text>
+          </TouchableOpacity>
+        </Card>
+
+        <Card style={[styles.insightCard, {borderLeftColor: error}]}>
+          <View style={styles.insightHeader}>
+            <MaterialCommunityIcons name="alert" size={24} color={error} />
+            <Text style={[styles.insightTitle, {color: error}]}>
+              {t('riskalert')}
+            </Text>
+          </View>
+          <Text style={[styles.insightText , {color:text}]}>
+            {t('vendor')}
+          </Text>
+          <TouchableOpacity
+            style={[styles.actionButton, {backgroundColor: error}]}>
+            <Text style={styles.actionButtonText}>{t('optsch')}</Text>
           </TouchableOpacity>
         </Card>
       </View>

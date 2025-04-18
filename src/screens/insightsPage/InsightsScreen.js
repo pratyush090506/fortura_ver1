@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { Card } from '../../components/Card';
-import { useThemeColor } from '../../hooks/useThemeColor';
+import { useThemeColor } from '../../context/ThemeProvider';
 import { useRoute } from '@react-navigation/native';
 import { GEMINI_API_KEY } from '@env';
 
 const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+import { useTranslation } from 'react-i18next';
 
 export default function InsightsScreen() {
   const { text, background, primary, success, warning, error, secondary } = useThemeColor();
@@ -153,6 +154,8 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
       <View style={styles.header}>
         <Text style={[styles.title, { color: text }]}>AI Insights</Text>
         <Text style={[styles.subtitle, { color: secondary }]}>Your Financial Health Report</Text>
+        <Text style={[styles.title, { color: text }]}>{t('aiInsights')}</Text>
+        <Text style={[styles.subtitle, { color: text }]}>{t('financialHealthReport')}</Text>
       </View>
 
       {loading && (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions, TextInput, TouchableOpacity } from 'react-native';
 import { Card } from '../../components/Card';
-import { useThemeColor } from '../../hooks/useThemeColor';
 import { BarChart } from 'react-native-chart-kit';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -19,9 +18,13 @@ const initialBudget = {
     { name: 'Shopping', budgeted: '700.00', spent: '500.00' },
   ],
 };
+import { useThemeColor } from '../../context/ThemeProvider';
+import { useCurrency } from '../../context/CurrencyContext';
+import { useTranslation } from 'react-i18next';
 
 export default function BudgetScreen() {
-  const { text, background, primary, warning, error, secondary } = useThemeColor();
+  const {selectedCurrencySign} = useCurrency();
+  const { text, background, primary, warning, error, secondary ,card} = useThemeColor();
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
 
@@ -272,7 +275,6 @@ const styles = StyleSheet.create({
   divider: {
     width: 1,
     height: 40,
-    backgroundColor: '#E9ECEF',
   },
   section: {
     paddingHorizontal: 24,

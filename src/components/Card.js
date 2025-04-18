@@ -1,5 +1,5 @@
 import { StyleSheet, View, ViewProps } from 'react-native';
-import { useThemeColor } from '../hooks/useThemeColor';
+import { useThemeColor } from '../context/ThemeProvider';
 
 export function Card({ style, children, ...props }) {
 
