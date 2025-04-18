@@ -1,5 +1,5 @@
 import { GEMINI_API_KEY } from '@env';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import {
   View,
@@ -11,9 +11,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ImageBackground,
 } from 'react-native';
-
-import LinearGradient from 'react-native-linear-gradient';
 import { useThemeColor } from '../../context/ThemeProvider';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -23,8 +22,16 @@ const AIAssistantScreen = () => {
   const [query, setQuery] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const scrollViewRef = useRef(null);
   const { text, background, primary } = useThemeColor();
   const { language } = useLanguage();
+
+  // Auto scroll on message change
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
 
   const handleAskGemini = async () => {
     if (!query.trim()) return;
@@ -93,8 +100,7 @@ const AIAssistantScreen = () => {
         }
       );
 
-      const aiContent =
-        response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      const aiContent = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (aiContent) {
         const aiMessage = { role: 'assistant', content: aiContent };
@@ -117,7 +123,10 @@ const AIAssistantScreen = () => {
   };
 
   return (
-    <LinearGradient colors={['#1f1c2c', '#928DAB']} style={styles.gradient}>
+    <ImageBackground 
+      source={require('../../assets/payScreenBackground.png')}
+      style={styles.backgroundImage}
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}>
@@ -127,9 +136,11 @@ const AIAssistantScreen = () => {
         </View>
 
         <ScrollView
+          ref={scrollViewRef}
           style={styles.chatContainer}
           contentContainerStyle={{ padding: 16, flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+        >
           {messages.length === 0 && !loading && (
             <View style={styles.placeholderContainer}>
               <Text style={styles.placeholderText}>
@@ -180,13 +191,14 @@ const AIAssistantScreen = () => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   gradient: { flex: 1 },
+  backgroundImage: { flex: 1 },
   header: {
     paddingTop: 60,
     paddingBottom: 24,
@@ -205,9 +217,7 @@ const styles = StyleSheet.create({
     color: '#ddd',
     marginTop: 6,
   },
-  chatContainer: {
-    flex: 1,
-  },
+  chatContainer: { flex: 1 },
   messageBubble: {
     maxWidth: '80%',
     padding: 12,
