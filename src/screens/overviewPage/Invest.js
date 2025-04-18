@@ -18,29 +18,17 @@ import axios from 'axios';
 import { Card } from '../../components/Card';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTranslation } from 'react-i18next';
+import { useThemeColor } from '../../context/ThemeProvider';
+
 
 const Invest = () => {
-  const theme = {
-    primary: '#6C5CE7',
-    secondary: '#A8A8A8',
-    background: '#F8F9FA',
-    card: '#FFFFFF',
-    text: '#2D3436',
-    border: '#E9ECEF',
-    notification: '#FF7675',
-    success: '#00B894',
-    warning: '#FDCB6E',
-    error: '#FF7675',
-  };
-
+  const {card , primary , text , background, secondary , border} = useThemeColor();
   const { t } = useTranslation();
-  const { text, primary } = theme;
   const [age, setAge] = useState('');
   const [futurePlans, setFuturePlans] = useState('');
   const [income, setIncome] = useState('');
   const [loading, setLoading] = useState(false);
   const [investmentPoints, setInvestmentPoints] = useState([]);
-  const navigation = useNavigation();
   const { language } = useLanguage();
 
   const handleGetInvestmentOptions = async () => {
@@ -139,49 +127,50 @@ const Invest = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: background }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.header}>
-            <Text style={[styles.title, { color: text }]}>
-              <MaterialCommunityIcons name="arrow-top-right" size={28} color={primary} /> {t('investmentAnalysis')}
+            <Text style={[styles.title, { color: text , marginTop:25 }]}>
+              <MaterialCommunityIcons name="arrow-top-right" size={28} color={primary} /> 
+              {t('investmentAnalysis')}
             </Text>
-            <Text style={[styles.subtitle, { color: text + '80', textAlign: 'center' }]}>
+            <Text style={[styles.subtitle, { color: text + '80', textAlign: 'center'}]}>
               Unleash the potential of your money with these insights.
             </Text>
           </View>
 
-          <Card style={[styles.inputCard, { backgroundColor: theme.card }]}>
+          <Card style={[styles.inputCard, { backgroundColor: card }]}>
             <Text style={[styles.label, { color: text }]}>{t('yourAge')}</Text>
             <TextInput
-              style={[styles.input, { borderColor: theme.border, color: text }]}
+              style={[styles.input, { borderColor: border, color: text }]}
               value={age}
               onChangeText={setAge}
               keyboardType="number-pad"
               placeholder="Enter your age (e.g., 25)"
-              placeholderTextColor={theme.secondary}
+              placeholderTextColor={secondary}
             />
 
             <Text style={[styles.label, { color: text }]}>{t('dreamFuturePlans')}</Text>
             <TextInput
-              style={[styles.inputMultiline, { borderColor: theme.border, color: text }]}
+              style={[styles.inputMultiline, { borderColor: border, color: text }]}
               value={futurePlans}
               onChangeText={setFuturePlans}
               placeholder="What are your big goals? (e.g., early retirement, dream home)"
-              placeholderTextColor={theme.secondary}
+              placeholderTextColor={secondary}
               multiline
             />
 
             <Text style={[styles.label, { color: text }]}>{t('annualIncome')} (₹):</Text>
             <TextInput
-              style={[styles.input, { borderColor: theme.border, color: text }]}
+              style={[styles.input, { borderColor: border, color: text }]}
               value={income}
               onChangeText={setIncome}
               keyboardType="number-pad"
               placeholder="Your yearly earnings (e.g., 500000)"
-              placeholderTextColor={theme.secondary}
+              placeholderTextColor={secondary}
             />
 
             <TouchableOpacity
@@ -189,21 +178,21 @@ const Invest = () => {
               onPress={handleGetInvestmentOptions}
               disabled={loading || !age || !futurePlans || !income}
             >
-              <Text style={{ color: theme.background, fontSize: 18, fontWeight: 'bold' }}>
-                {loading ? (
-                  <ActivityIndicator size="small" color={theme.background} />
-                ) : (
-                  <>
-                    <MaterialCommunityIcons name="lightbulb-on" size={20} color={theme.background} style={{ marginRight: 8 }} />
+              {loading ? (
+                <ActivityIndicator size="small" color={background} />
+              ) : (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <MaterialCommunityIcons name="lightbulb-on" size={20} color={background} style={{ marginRight: 8 }} />
+                  <Text style={{ color: background, fontSize: 18, fontWeight: 'bold' }}>
                     {t('analyze')}
-                  </>
-                )}
-              </Text>
+                  </Text>
+                </View>
+              )}
             </TouchableOpacity>
           </Card>
 
           {investmentPoints.length > 0 && (
-            <Card style={[styles.resultsCard, { backgroundColor: theme.card }]}>
+            <Card style={[styles.resultsCard, { backgroundColor: card }]}>
               <Text style={[styles.resultsTitle, { color: primary }]}>
                 <MaterialCommunityIcons name="thought-bubble" size={24} color={primary} style={{ marginRight: 8 }} />
                 Here's What I've Got:

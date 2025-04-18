@@ -1,9 +1,9 @@
+import { GEMINI_API_KEY } from '@env';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { Card } from '../../components/Card';
 import { useThemeColor } from '../../context/ThemeProvider';
 import { useRoute } from '@react-navigation/native';
-import { GEMINI_API_KEY } from '@env';
 
 const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 import { useTranslation } from 'react-i18next';

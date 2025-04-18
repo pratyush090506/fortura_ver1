@@ -15,10 +15,9 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import { useThemeColor } from '../../context/ThemeProvider';
-const API_ENDPOINT =
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
-
 import { useLanguage } from '../../context/LanguageContext';
+
+const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 const AIAssistantScreen = () => {
   const [query, setQuery] = useState('');
@@ -48,7 +47,7 @@ const AIAssistantScreen = () => {
       } else if (language === 'pa') {
         aiWelcomeMessageContent += ' ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ।';
       } else {
-        aiWelcomeMessageContent += ' give the response in English.';
+        aiWelcomeMessageContent += ' Give the response in English.';
       }
       const aiWelcomeMessage = { role: 'assistant', content: aiWelcomeMessageContent };
       setMessages(prev => [...prev, aiWelcomeMessage]);
@@ -69,7 +68,7 @@ const AIAssistantScreen = () => {
     } else if (language === 'pa') {
       engineeredPrompt = `ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ। ${engineeredPrompt}`;
     } else {
-      engineeredPrompt += ' give the response in English.';
+      engineeredPrompt += ' Give the response in English.';
     }
 
     try {
@@ -78,6 +77,7 @@ const AIAssistantScreen = () => {
         {
           contents: [
             {
+              role: 'user',
               parts: [
                 {
                   text: engineeredPrompt,
@@ -90,7 +90,7 @@ const AIAssistantScreen = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
 
       const aiContent =
@@ -106,7 +106,7 @@ const AIAssistantScreen = () => {
         ]);
       }
     } catch (error) {
-      console.error('Error calling AI:', error);
+      console.error('Error calling AI:', error?.message);
       setMessages(prev => [
         ...prev,
         { role: 'assistant', content: 'Sorry, something went wrong!' },

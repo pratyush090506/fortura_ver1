@@ -173,15 +173,15 @@ const styles = StyleSheet.create({
   },
   flexGrow: {
     flexGrow: 1,
-    justifyContent: 'center', // Center the logo vertically
-    alignItems: 'center',     // Center the logo horizontally
+    justifyContent: 'center', 
+    alignItems: 'center',     
   },
   logoContainer: {
-    marginBottom: 32, // Add some space between the logo and the login sheet
+    marginBottom: 32, 
   },
   logo: {
-    width: 150, // Adjust the width as needed
-    height: 150, // Adjust the height as needed
+    width: 150, 
+    height: 150,
   },
   sheet: {
     width: '100%',

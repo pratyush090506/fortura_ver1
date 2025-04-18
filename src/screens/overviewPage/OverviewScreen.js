@@ -11,7 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 
 const OverviewScreen = () => {
   const {user} = useContext(UserContext);
-  const {selectedCurrencySign} = useCurrency();  const {text, primary, background, success, warning, error,card} = useThemeColor();
+  const {selectedCurrencySign} = useCurrency();  
+  const {text, primary, background, success, warning, error,card} = useThemeColor();
   const {t} = useTranslation();
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
