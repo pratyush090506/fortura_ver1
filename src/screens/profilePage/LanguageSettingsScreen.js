@@ -1,30 +1,101 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Picker } from 'react-native';
+import React from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
+import {useLanguage} from '../../context/LanguageContext';
+import {useTranslation} from 'react-i18next';
+import {useThemeColor} from '../../context/ThemeProvider';
+import {Card} from '../../components/Card';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const LanguageSettingsScreen = () => {
-    const [selectedLanguage, setSelectedLanguage] = useState('English');
+export default function LanguageSettings() {
+  const {changeLanguage, language} = useLanguage();
+  const {t} = useTranslation();
+  const {background, text} = useThemeColor();
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Select Language</Text>
-            <Picker
-                selectedValue={selectedLanguage}
-                style={styles.picker}
-                onValueChange={(itemValue) => setSelectedLanguage(itemValue)}
-            >
-                <Picker.Item label="English" value="English" />
-                <Picker.Item label="Spanish" value="Spanish" />
-                <Picker.Item label="French" value="French" />
-                <Picker.Item label="German" value="German" />
-            </Picker>
-        </View>
-    );
-};
+  const langs = [
+    {code: 'en', labelKey: 'English', icon: 'web'},
+    {code: 'hi', labelKey: 'हिन्दी', icon: 'translate'},
+    {code: 'bn', labelKey: 'বাংলা', icon: 'translate'},
+    {code: 'pa', labelKey: 'ਪੰਜਾਬੀ', icon: 'translate'},
+    {code: 'or', labelKey: 'ଓଡ଼ିଆ', icon: 'translate'},
+    {code: 'kn', labelKey: 'ಕನ್ನಡ', icon: 'translate'},
+  ];
+
+  return (
+    <ScrollView contentContainerStyle={[styles.container, {backgroundColor: background}]}>
+      <Text style={[styles.header, {color: text}]}>{t('changeLanguage')}</Text>
+
+      <View style={styles.languageList}>
+        {langs.map(lang => (
+          <Card key={lang.code} style={styles.languageCard}>
+            <TouchableOpacity
+              onPress={() => changeLanguage(lang.code)}
+              style={styles.languageOption}>
+              <MaterialCommunityIcons
+                name={lang.icon}
+                size={24}
+                color={text}
+                style={styles.languageIcon}
+              />
+              <Text style={[styles.languageText, {color: text}]}>
+                {t(lang.labelKey)}
+              </Text>
+              {language === lang.code && (
+                <MaterialCommunityIcons
+                  name="check-circle-outline"
+                  size={24}
+                  color="#4CAF50"
+                />
+              )}
+            </TouchableOpacity>
+          </Card>
+        ))}
+      </View>
+    </ScrollView>
+  );
+}
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20 },
-    title: { fontSize: 24, marginBottom: 20 },
-    picker: { height: 50, width: '100%' },
-});
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
 
-export default LanguageSettingsScreen;
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+
+  languageList: {
+    marginTop: 10,
+  },
+
+  languageCard: {
+    marginVertical: 8,
+  },
+
+  languageOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+  },
+
+  languageIcon: {
+    marginRight: 15,
+  },
+
+  languageText: {
+    fontSize: 18,
+    color: '#333',
+    flex: 1,
+  },
+});

@@ -1,5 +1,5 @@
 import { GEMINI_API_KEY } from '@env';
-import React, {useState} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import {
   View,
@@ -11,39 +11,75 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ImageBackground,
 } from 'react-native';
+import { useThemeColor } from '../../context/ThemeProvider';
+import { useLanguage } from '../../context/LanguageContext';
+import { useTranslation } from 'react-i18next';
+import Icon from 'react-native-vector-icons/Feather';
 
-import LinearGradient from 'react-native-linear-gradient';
-import {useThemeColor} from '../../hooks/useThemeColor';
-const API_ENDPOINT =
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 const AIAssistantScreen = () => {
   const [query, setQuery] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {text, background, primary} = useThemeColor();
+  const scrollViewRef = useRef(null);
+  const { text, background, primary } = useThemeColor();
+  const { language } = useLanguage();
+  const { t } = useTranslation();
+
+  // Auto scroll on message change
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
 
   const handleAskGemini = async () => {
     if (!query.trim()) return;
 
-    const userMessage = {role: 'user', content: query};
+    const userMessage = { role: 'user', content: query };
     setMessages(prev => [...prev, userMessage]);
-    setQuery(''); // Clear the input immediately
+    setQuery('');
 
     const greetings = ['hello', 'hi', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening'];
     if (greetings.includes(query.toLowerCase().trim())) {
-      const aiWelcomeMessage = {
-        role: 'assistant',
-        content:
-          'Welcome to Fortura AI! How can I help you with your personal finances today?',
-      };
+      let aiWelcomeMessageContent = `Welcome to Fortura AI! How can I help you with your personal finances today?`;
+      if (language === 'or') {
+        aiWelcomeMessageContent += ' ଓଡ଼ିଆରେ ଉତ୍ତର ଦିଅନ୍ତୁ।';
+      } else if (language === 'hi') {
+        aiWelcomeMessageContent += ' हिंदी में उत्तर दें।';
+      } else if (language === 'bn') {
+        aiWelcomeMessageContent += ' বাংলায় উত্তর দাও।';
+      } else if (language === 'kn') {
+        aiWelcomeMessageContent += ' ಕನ್ನಡದಲ್ಲಿ ಉತ್ತರಿಸಿ।';
+      } else if (language === 'pa') {
+        aiWelcomeMessageContent += ' ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ।';
+      } else {
+        aiWelcomeMessageContent += ' Give the response in English.';
+      }
+      const aiWelcomeMessage = { role: 'assistant', content: aiWelcomeMessageContent };
       setMessages(prev => [...prev, aiWelcomeMessage]);
       return;
     }
 
     setLoading(true);
-    const engineeredPrompt = `You are Fortura AI, a helpful personal finance assistant. Please answer the following question clearly and concisely: ${query}`;
+    let engineeredPrompt = `You are Fortura AI, a helpful personal finance assistant. Please answer the following question clearly and concisely: ${query}`;
+
+    if (language === 'or') {
+      engineeredPrompt = `ଓଡ଼ିଆରେ ଉତ୍ତର ଦିଅନ୍ତୁ। ${engineeredPrompt}`;
+    } else if (language === 'hi') {
+      engineeredPrompt = `हिंदी में उत्तर दें। ${engineeredPrompt}`;
+    } else if (language === 'bn') {
+      engineeredPrompt = `বাংলায় উত্তর দাও। ${engineeredPrompt}`;
+    } else if (language === 'kn') {
+      engineeredPrompt = `ಕನ್ನಡದಲ್ಲಿ ಉತ್ತರಿಸಿ। ${engineeredPrompt}`;
+    } else if (language === 'pa') {
+      engineeredPrompt = `ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ। ${engineeredPrompt}`;
+    } else {
+      engineeredPrompt += ' Give the response in English.';
+    }
 
     try {
       const response = await axios.post(
@@ -51,6 +87,7 @@ const AIAssistantScreen = () => {
         {
           contents: [
             {
+              role: 'user',
               parts: [
                 {
                   text: engineeredPrompt,
@@ -63,51 +100,54 @@ const AIAssistantScreen = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
 
-      const aiContent =
-        response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      const aiContent = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (aiContent) {
-        const aiMessage = {role: 'assistant', content: aiContent};
+        const aiMessage = { role: 'assistant', content: aiContent };
         setMessages(prev => [...prev, aiMessage]);
       } else {
         setMessages(prev => [
           ...prev,
-          {role: 'assistant', content: 'Sorry, the AI response was empty.'},
+          { role: 'assistant', content: 'Sorry, the AI response was empty.' },
         ]);
       }
     } catch (error) {
-      console.error('Error calling AI:', error);
+      console.error('Error calling AI:', error?.message);
       setMessages(prev => [
         ...prev,
-        {role: 'assistant', content: 'Sorry, something went wrong!'},
+        { role: 'assistant', content: 'Sorry, something went wrong!' },
       ]);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
-    <LinearGradient colors={['#1f1c2c', '#928DAB']} style={styles.gradient}>
+    <ImageBackground 
+      source={require('../../assets/payScreenBackground.png')}
+      style={styles.backgroundImage}
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Fortura AI</Text>
-
-          <Text style={styles.subHeader}>Your Personal Finance Assistant</Text>
+          <Text style={styles.subHeader}>{t('fa')}</Text>
         </View>
 
         <ScrollView
+          ref={scrollViewRef}
           style={styles.chatContainer}
-          contentContainerStyle={{padding: 16, flexGrow: 1}}
-          showsVerticalScrollIndicator={false}>
+          contentContainerStyle={{ padding: 16, flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
           {messages.length === 0 && !loading && (
             <View style={styles.placeholderContainer}>
               <Text style={styles.placeholderText}>
-                💬 Ask me anything about budgeting, saving, or finance!
+                {t('askbanner')}
               </Text>
             </View>
           )}
@@ -117,14 +157,12 @@ const AIAssistantScreen = () => {
               key={index}
               style={[
                 styles.messageBubble,
-
                 msg.role === 'user' ? styles.userBubble : styles.aiBubble,
               ]}>
               <Text
                 style={[
                   styles.messageText,
-
-                  {color: msg.role === 'user' ? '#fff' : '#111'},
+                  { color: msg.role === 'user' ? '#fff' : '#111' },
                 ]}>
                 {msg.content}
               </Text>
@@ -135,7 +173,7 @@ const AIAssistantScreen = () => {
             <ActivityIndicator
               size="small"
               color={primary}
-              style={{marginTop: 10}}
+              style={{ marginTop: 10 }}
             />
           )}
         </ScrollView>
@@ -144,26 +182,27 @@ const AIAssistantScreen = () => {
           <TextInput
             style={styles.input}
             value={query}
-            placeholder="Ask me something..."
+            placeholder={t('ask')}
             placeholderTextColor="#ccc"
             onChangeText={setQuery}
             multiline
           />
-
           <TouchableOpacity
             onPress={handleAskGemini}
-            style={[styles.sendButton, {backgroundColor: primary}]}>
-            <Text style={styles.sendText}>Send</Text>
+            style={[styles.sendButton, { backgroundColor: primary }]}>
+
+            <Icon name="send" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  flex: {flex: 1},
-  gradient: {flex: 1},
+  flex: { flex: 1 },
+  gradient: { flex: 1 },
+  backgroundImage: { flex: 1 },
   header: {
     paddingTop: 60,
     paddingBottom: 24,
@@ -182,16 +221,14 @@ const styles = StyleSheet.create({
     color: '#ddd',
     marginTop: 6,
   },
-  chatContainer: {
-    flex: 1,
-  },
+  chatContainer: { flex: 1 },
   messageBubble: {
     maxWidth: '80%',
     padding: 12,
     marginBottom: 12,
     borderRadius: 16,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 2,

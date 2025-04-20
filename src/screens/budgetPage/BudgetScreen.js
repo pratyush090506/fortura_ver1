@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions, TextInput, TouchableOpacity } from 'react-native';
-import { Card } from '../../components/Card';
-import { useThemeColor } from '../../hooks/useThemeColor';
 import { BarChart } from 'react-native-chart-kit';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BUDGET_STORAGE_KEY = 'userBudgetData';
-const initialBudget = {
-  total: '5000.00',
-  spent: '3240.50',
-  categories: [
-    { name: 'Food & Dining', budgeted: '1000.00', spent: '800.00' },
-    { name: 'Transportation', budgeted: '500.00', spent: '300.00' },
-    { name: 'Entertainment', budgeted: '1500.00', spent: '450.00' },
-    { name: 'Utilities', budgeted: '300.00', spent: '250.00' },
-    { name: 'Shopping', budgeted: '700.00', spent: '500.00' },
-  ],
-};
+
+import { useThemeColor } from '../../context/ThemeProvider';
+import { useCurrency } from '../../context/CurrencyContext';
+import { useTranslation } from 'react-i18next';
 
 export default function BudgetScreen() {
+  const { t } = useTranslation();
+
+  const initialBudget = {
+    total: '5000.00',
+    spent: '3240.50',
+    categories: [
+      { name: 'foodDining', budgeted: '1200.00', spent: '900.00' },
+      { name: 'transportation', budgeted: '600.00', spent: '350.00' },
+      { name: 'entertainment', budgeted: '1600.00', spent: '500.00' },
+      { name: 'utilities', budgeted: '400.00', spent: '300.00' },
+      { name: 'shopping', budgeted: '800.00', spent: '550.00' },
+    ],
+  };
+
+  const { selectedCurrencySign } = useCurrency();
   const { text, background, primary, warning, error, secondary } = useThemeColor();
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
@@ -30,7 +36,7 @@ export default function BudgetScreen() {
   const remaining = (parseFloat(budgetData.total) - parseFloat(budgetData.spent)).toFixed(2);
 
   const chartData = {
-    labels: budgetData.categories.map(cat => cat.name),
+    labels: budgetData.categories.map(cat => t(cat.name)),
     datasets: [
       {
         data: budgetData.categories.map(cat => parseFloat(cat.spent)),
@@ -45,16 +51,15 @@ export default function BudgetScreen() {
     decimalPlaces: 0,
     color: (opacity = 1) => primary,
     labelColor: (opacity = 0.8) => secondary,
-    barPercentage: 0.6, // Adjust the width of the bars (0 to 1)
+    barPercentage: 0.6,
     style: {
       borderRadius: 8,
     },
     propsForLabels: {
       fontSize: 10,
     },
-    xAxisLabel: '₹', // Add label to the x-axis
-    yAxisSuffix: '₹', // Add suffix to the y-axis labels
-    yAxisInterval: 1000, // Adjust the interval of y-axis labels if needed
+    yAxisSuffix: ` ${selectedCurrencySign}`,
+    yAxisInterval: 1000,
   };
 
   useEffect(() => {
@@ -66,13 +71,11 @@ export default function BudgetScreen() {
       const storedBudget = await AsyncStorage.getItem(BUDGET_STORAGE_KEY);
       if (storedBudget) {
         setBudgetData(JSON.parse(storedBudget));
-        console.log('BudgetScreen: Loaded budget from storage:', JSON.parse(storedBudget));
       } else {
         setBudgetData(initialBudget);
-        console.log('BudgetScreen: No budget found, using initial budget.');
       }
     } catch (error) {
-      console.error('BudgetScreen: Error loading budget:', error);
+      console.error('Error loading budget:', error);
       setBudgetData(initialBudget);
     }
   };
@@ -80,9 +83,8 @@ export default function BudgetScreen() {
   const saveBudget = async (data) => {
     try {
       await AsyncStorage.setItem(BUDGET_STORAGE_KEY, JSON.stringify(data));
-      console.log('BudgetScreen: Budget saved to storage:', data);
     } catch (error) {
-      console.error('BudgetScreen: Error saving budget:', error);
+      console.error('Error saving budget:', error);
     }
   };
 
@@ -107,23 +109,22 @@ export default function BudgetScreen() {
   };
 
   const handleSaveBudget = () => {
-    console.log('Budget Data Saved:', budgetData);
-    saveBudget(budgetData); // Save to AsyncStorage
+    saveBudget(budgetData);
     navigation.navigate('Insights', { budgetData });
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: background, flex: 1 }]}>
+    <View style={[styles.container, { backgroundColor: background }]}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: text }]}>Edit Monthly Budget</Text>
-          <Text style={[styles.subtitle, { color: secondary }]}>April 2025</Text>
+          <Text style={[styles.title, { color: text }]}>{t('editmonthlybudget')}</Text>
+          <Text style={[styles.subtitle, { color: secondary }]}>{t('april')} 2025</Text>
         </View>
 
-        <Card style={styles.summaryCard}>
+        <View style={styles.summaryCard}>
           <View style={styles.summaryRow}>
             <View style={styles.summaryItem}>
-              <Text style={[styles.summaryLabel, { color: secondary }]}>Budget</Text>
+              <Text style={[styles.summaryLabel, { color: secondary }]}>{t('budgetLabel')}</Text>
               <TextInput
                 style={[styles.summaryInput, { color: text }]}
                 value={budgetData.total}
@@ -133,7 +134,7 @@ export default function BudgetScreen() {
             </View>
             <View style={styles.divider} />
             <View style={styles.summaryItem}>
-              <Text style={[styles.summaryLabel, { color: secondary }]}>Spent</Text>
+              <Text style={[styles.summaryLabel, { color: secondary }]}>{t('spentLabel')}</Text>
               <TextInput
                 style={[styles.summaryInput, { color: text }]}
                 value={budgetData.spent}
@@ -143,35 +144,36 @@ export default function BudgetScreen() {
             </View>
             <View style={styles.divider} />
             <View style={styles.summaryItem}>
-              <Text style={[styles.summaryLabel, { color: secondary }]}>Remaining</Text>
-              <Text style={[styles.summaryAmount, { color: primary }]}>₹{remaining}</Text>
+              <Text style={[styles.summaryLabel, { color: secondary }]}>{t('remainingLabel')}</Text>
+              <Text style={[styles.summaryAmount, { color: primary }]}>{selectedCurrencySign}{remaining}</Text>
             </View>
           </View>
-        </Card>
-
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: text }]}>Spending Breakdown</Text>
-          <Card style={styles.chartCard}>
-            <BarChart
-              data={chartData}
-              width={screenWidth - 48}
-              height={200} // Adjust height as needed
-              chartConfig={chartConfig}
-              style={{
-                marginVertical: 8,
-              }}
-            />
-          </Card>
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: text }]}>Categories</Text>
+          <Text style={[styles.sectionTitle, { color: text }]}>{t('spendingbreakdown')}</Text>
+          <View style={styles.chartCard}>
+            <BarChart
+              data={chartData}
+              width={screenWidth - 48}
+              height={200}
+              chartConfig={chartConfig}
+              style={{
+                marginVertical: 8,
+                alignSelf: 'center',
+              }}
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: text }]}>{t('categories')}</Text>
           {budgetData.categories.map((category, index) => (
-            <Card style={styles.categoryCard} key={index}>
+            <View style={styles.categoryCard} key={index}>
               <View style={styles.categoryHeader}>
-                <Text style={[styles.categoryName, { color: text }]}>{category.name}</Text>
+                <Text style={[styles.categoryName, { color: text }]}>{t(category.name)}</Text>
                 <View style={styles.categoryAmountContainer}>
-                  <Text style={[styles.categoryAmountLabel, { color: secondary }]}>Budget:</Text>
+                  <Text style={[styles.categoryAmountLabel, { color: secondary }]}>{t('budgetLabel')}:</Text>
                   <TextInput
                     style={[styles.categoryBudgetInput, { color: text }]}
                     value={category.budgeted}
@@ -186,14 +188,14 @@ export default function BudgetScreen() {
                     style={[
                       styles.progress,
                       {
-                        width: `${(parseFloat(category.spent) / parseFloat(category.budgeted) || 0) * 100}%`,
+                        width: `${(parseFloat(category.budgeted) > 0 ? (parseFloat(category.spent) / parseFloat(category.budgeted)) : 0) * 100}%`,
                         backgroundColor: (parseFloat(category.spent) / parseFloat(category.budgeted) > 0.8 ? error : primary),
                       },
                     ]}
                   />
                 </View>
                 <View style={styles.spentInputContainer}>
-                  <Text style={[styles.categorySpentLabel, { color: secondary }]}>Spent:</Text>
+                  <Text style={[styles.categorySpentLabel, { color: secondary }]}>{t('spentLabel')}:</Text>
                   <TextInput
                     style={[styles.categorySpentInput, { color: text }]}
                     value={category.spent}
@@ -202,14 +204,14 @@ export default function BudgetScreen() {
                   />
                 </View>
               </View>
-            </Card>
+            </View>
           ))}
         </View>
       </ScrollView>
 
       <TouchableOpacity style={[styles.saveButton, { backgroundColor: primary }]} onPress={handleSaveBudget}>
         <Icon name="check" size={24} color="white" />
-        <Text style={styles.saveButtonText}>Save Budget</Text>
+        <Text style={styles.saveButtonText}>{t('saveBudget')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -256,10 +258,6 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     marginBottom: 4,
   },
-  summaryAmount: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   summaryInput: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -269,10 +267,13 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     width: 90,
   },
+  summaryAmount: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
   divider: {
     width: 1,
     height: 40,
-    backgroundColor: '#E9ECEF',
   },
   section: {
     paddingHorizontal: 24,
@@ -282,29 +283,26 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   chartCard: {
-    padding: 16,
     borderRadius: 8,
-    marginHorizontal: 24,
+    padding: 12,
   },
   categoryCard: {
-    marginBottom: 12,
+    marginBottom: 16,
     padding: 16,
-    borderRadius: 8,
-    marginHorizontal: 24,
-  },
+    borderRadius: 10,
+    backgroundColor: '#333'},
+
   categoryHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
   },
   categoryName: {
-    fontSize: 16,
-    fontWeight: '500',
-    flex: 1,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   categoryAmountContainer: {
     flexDirection: 'row',
@@ -312,25 +310,27 @@ const styles = StyleSheet.create({
   },
   categoryAmountLabel: {
     fontSize: 14,
-    opacity: 0.7,
     marginRight: 4,
   },
-  categoryAmount: {
+  categoryBudgetInput: {
     fontSize: 16,
-    fontWeight: '500',
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    width: 80,
+    textAlign: 'center',
   },
   progressBarContainer: {
-    marginVertical: 8,
+    marginTop: 12,
   },
   progressBar: {
-    height: 8,
-    backgroundColor: '#E9ECEF',
-    borderRadius: 4,
+    height: 10,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 5,
     overflow: 'hidden',
   },
   progress: {
-    height: '100%',
-    borderRadius: 4,
+    height: 10,
+    borderRadius: 5,
   },
   spentInputContainer: {
     flexDirection: 'row',
@@ -339,37 +339,31 @@ const styles = StyleSheet.create({
   },
   categorySpentLabel: {
     fontSize: 14,
-    opacity: 0.7,
-    marginRight: 8,
-  },
-  categoryBudgetInput: {
-    width: 80,
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    textAlign: 'right',
-    paddingVertical: 2,
+    marginRight: 4,
   },
   categorySpentInput: {
-    width: 80,
+    fontSize: 16,
     borderBottomWidth: 1,
     borderColor: '#ccc',
-    paddingVertical: 2,
+    width: 80,
+    textAlign: 'center',
   },
   saveButton: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#6C5CE7',
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    bottom: 16,
+    right: 16,
     flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 30,
+    elevation: 4,
   },
   saveButtonText: {
     color: 'white',
-    fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 16,
     marginLeft: 8,
+    fontWeight: 'bold',
   },
+  
 });

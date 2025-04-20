@@ -1,15 +1,17 @@
 import React, { useState , useContext} from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { Card } from '../../components/Card';
-import { useThemeColor } from '../../hooks/useThemeColor';
+import { useThemeColor } from '../../context/ThemeProvider';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { UserContext } from '../../context/UserContext';
+import {useTranslation} from 'react-i18next'
 
 const ProfileScreen = ({ navigation}) => {
   const {user} = useContext(UserContext);
+  const {t} = useTranslation();
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const { text, background, primary, card } = useThemeColor();
+  const { text,primary,background,card } = useThemeColor();
 
   const handleMenuPress = (action) => {
     switch (action) {
@@ -43,8 +45,7 @@ const ProfileScreen = ({ navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* <ScrollView style={styles.scrollView}> */}
+    <View style={[styles.container , { backgroundColor: background }]}>
         <View style={styles.header}>
           <Image
             source={{
@@ -52,27 +53,27 @@ const ProfileScreen = ({ navigation}) => {
             }}
             style={styles.avatar}
           />
-          <Text style={[styles.name, { color: 'black' }]}>{user.name}</Text>
-          <Text style={[styles.phone, { color: 'black' }]}>{user.phone}</Text>
+          <Text style={[styles.name, { color: text }]}>{user.name}</Text>
+          <Text style={[styles.phone, { color: text }]}>{user.phone}</Text>
         </View>
 
         {isLoggedIn ? (
           <>
             <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: 'black' }]}>Account Settings</Text>
+              <Text style={[styles.sectionTitle, { color: text }]}>{t('accountSettings')}</Text>
 
               <Card style={styles.menuCard}>
                 <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('edit-profile')}>
                   <MaterialCommunityIcons name="account-edit" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Profile settings</Text>
+                  <Text style={[styles.menuText, { color: text }]}>{t('profileSettings')}</Text>
                   <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
                 </TouchableOpacity>
 
-                <View style={styles.divider} />
+                <View style={[styles.divider, { backgroundColor: background }]} />
 
                 <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('notifications')}>
                   <MaterialCommunityIcons name="bell" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Notifications</Text>
+                  <Text style={[styles.menuText, { color: text }]}>{t('notifications')}</Text>
                   <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
                 </TouchableOpacity>
                 
@@ -80,28 +81,28 @@ const ProfileScreen = ({ navigation}) => {
             </View>
 
             <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: 'black' }]}>Preferences</Text>
+              <Text style={[styles.sectionTitle, { color: text }]}>{t('preferences')}</Text>
 
               <Card style={styles.menuCard}>
                 <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('currency')}>
                   <MaterialCommunityIcons name="currency-inr" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Currency</Text>
+                  <Text style={[styles.menuText, { color: text }]}>{t('currency')}</Text>
                   <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
                 </TouchableOpacity>
 
-                <View style={styles.divider} />
+                <View style={[styles.divider, { backgroundColor: background }]} />
 
                 <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('theme')}>
                   <MaterialCommunityIcons name="theme-light-dark" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Theme</Text>
+                  <Text style={[styles.menuText, { color: text }]}>{t('theme')}</Text>
                   <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
                 </TouchableOpacity>
 
-                <View style={styles.divider} />
+                <View style={[styles.divider, { backgroundColor: background }]} />
 
                 <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('language')}>
                   <MaterialCommunityIcons name="translate" size={24} color={primary} />
-                  <Text style={[styles.menuText, { color: text }]}>Language</Text>
+                  <Text style={[styles.menuText, { color: text }]}>{t('language')}</Text>
                   <MaterialCommunityIcons name="chevron-right" size={24} color={text} />
                 </TouchableOpacity>
               </Card>
@@ -112,7 +113,7 @@ const ProfileScreen = ({ navigation}) => {
                 style={[styles.logoutButton, { backgroundColor: card }]}
                 onPress={() => handleMenuPress('logout')}>
                  <MaterialCommunityIcons name='logout' size={30} color={primary}/>   
-                <Text style={[styles.logoutText, { color: primary }]}>Log Out</Text>
+                <Text style={[styles.logoutText, { color: primary }]}>{t('logOut')}</Text>
               </TouchableOpacity>
             </View>
           </>
@@ -120,10 +121,9 @@ const ProfileScreen = ({ navigation}) => {
           <TouchableOpacity
             style={[styles.logoutButton, { backgroundColor: card }]}
             onPress={() => handleMenuPress('login')}>
-            <Text style={[styles.logoutText, { color: primary }]}>Login</Text>
+            <Text style={[styles.logoutText, { color: primary }]}>{t('login')}</Text>
           </TouchableOpacity>
         )}
-      {/* </ScrollView> */}
     </View>
   );
 };
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   menuCard: { padding: 0 },
   menuItem: { flexDirection: 'row', alignItems: 'center', padding: 16 },
   menuText: { flex: 1, fontSize: 16, marginLeft: 16 },
-  divider: { height: 1, backgroundColor: '#E9ECEF' },
+  divider: { height: 1},
   logoutButton: { flexDirection: 'row', alignItems: 'center',justifyContent:'center', marginTop: 24, padding: 16, borderRadius: 12, alignItems: 'center' },
   logoutText: { fontSize: 16, fontWeight: '600' },
 });

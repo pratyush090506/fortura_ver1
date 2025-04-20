@@ -12,34 +12,26 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
+import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { Card } from '../../components/Card';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTranslation } from 'react-i18next';
+import { useThemeColor } from '../../context/ThemeProvider';
 
 const Invest = () => {
-  const theme = {
-    primary: '#6C5CE7',
-    secondary: '#A8A8A8',
-    background: '#F8F9FA',
-    card: '#FFFFFF',
-    text: '#2D3436',
-    border: '#E9ECEF',
-    notification: '#FF7675',
-    success: '#00B894',
-    warning: '#FDCB6E',
-    error: '#FF7675',
-  };
-  const { text, primary } = theme;
+  const { text, background, primary, warning, error, secondary, card, border } = useThemeColor();
+  const { t } = useTranslation();
   const [age, setAge] = useState('');
   const [futurePlans, setFuturePlans] = useState('');
   const [income, setIncome] = useState('');
   const [loading, setLoading] = useState(false);
   const [investmentPoints, setInvestmentPoints] = useState([]);
   const navigation = useNavigation();
-//   const language = 'Odia';
+  const { language } = useLanguage();
+
   const handleGetInvestmentOptions = async () => {
-    
     if (!age || !futurePlans || !income) {
       alert('Please answer all the questions.');
       return;
@@ -48,7 +40,7 @@ const Invest = () => {
     setLoading(true);
     setInvestmentPoints([]);
 
-    const prompt = `Hey smart investor! Based on your details:
+    let prompt = `Hey smart investor! Based on your details:
     Age: ${age}
     Future Goals: ${futurePlans}
     Annual Income: ₹${income}
@@ -59,15 +51,7 @@ const Invest = () => {
       const response = await axios.post(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
         {
-          contents: [
-            {
-              parts: [
-                {
-                  text: prompt,
-                },
-              ],
-            },
-          ],
+          contents: [{ parts: [{ text: prompt }] }],
         },
         {
           headers: {
@@ -98,49 +82,51 @@ const Invest = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: background }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.flex}>
+        style={styles.flex}
+      >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.header}>
+          <View style={[styles.header, { marginTop: 20 }]}> {/* Added marginTop here */}
             <Text style={[styles.title, { color: text }]}>
-              <MaterialCommunityIcons name="arrow-top-right" size={28} color={primary} /> Investment Analysis
+              <MaterialCommunityIcons name="arrow-top-right" size={28} color={primary} />{' '}
+              {t('investmentAnalysis')}
             </Text>
             <Text style={[styles.subtitle, { color: text + '80', textAlign: 'center' }]}>
-              Unleash the potential of your money with these insights.
+              {t('unleash')}
             </Text>
           </View>
 
-          <Card style={[styles.inputCard, { backgroundColor: theme.card }]}>
-            <Text style={[styles.label, { color: text }]}>Your Age:</Text>
+          <Card style={[styles.inputCard, { backgroundColor: card }]}>
+            <Text style={[styles.label, { color: text }]}>{t('yourage')}</Text>
             <TextInput
-              style={[styles.input, { borderColor: theme.border, color: text }]}
+              style={[styles.input, { borderColor: border, color: text }]}
               value={age}
               onChangeText={setAge}
               keyboardType="number-pad"
-              placeholder="Enter your age (e.g., 25)"
-              placeholderTextColor={theme.secondary}
+              placeholder={t('enterAge')}
+              placeholderTextColor={secondary}
             />
 
-            <Text style={[styles.label, { color: text }]}>Dream Future Plans:</Text>
+            <Text style={[styles.label, { color: text }]}>{t('dreamFuturePlans')}</Text>
             <TextInput
-              style={[styles.inputMultiline, { borderColor: theme.border, color: text }]}
+              style={[styles.inputMultiline, { borderColor: border, color: text }]}
               value={futurePlans}
               onChangeText={setFuturePlans}
-              placeholder="What are your big goals? (e.g., early retirement, dream home)"
-              placeholderTextColor={theme.secondary}
+              placeholder={t('enterFuturePlans')}
+              placeholderTextColor={secondary}
               multiline
             />
 
-            <Text style={[styles.label, { color: text }]}>Your Annual Income (₹):</Text>
+            <Text style={[styles.label, { color: text }]}>{t('annualIncome')} (₹):</Text>
             <TextInput
-              style={[styles.input, { borderColor: theme.border, color: text }]}
+              style={[styles.input, { borderColor: border, color: text }]}
               value={income}
               onChangeText={setIncome}
               keyboardType="number-pad"
-              placeholder="Your yearly earnings (e.g., 500000)"
-              placeholderTextColor={theme.secondary}
+              placeholder={t('enterIncome')}
+              placeholderTextColor={secondary}
             />
 
             <TouchableOpacity
@@ -148,39 +134,32 @@ const Invest = () => {
               onPress={handleGetInvestmentOptions}
               disabled={loading || !age || !futurePlans || !income}
             >
-              <Text style={{ color: theme.background, fontSize: 18, fontWeight: 'bold' }}>
-                {loading ? (
-                  <ActivityIndicator size="small" color={theme.background} />
-                ) : (
-                  <>
-                    <MaterialCommunityIcons name="lightbulb-on" size={20} color={theme.background} style={{ marginRight: 8 }} />
-                    Analyze
-                  </>
-                )}
-              </Text>
+              {loading ? (
+                <ActivityIndicator size="small" color={background} />
+              ) : (
+                <Text style={{ color: background, fontSize: 18, fontWeight: 'bold' }}>
+                  <MaterialCommunityIcons name="lightbulb-on" size={20} color={background} />{' '}
+                  {t('analyseoptions')}
+                </Text>
+              )}
             </TouchableOpacity>
           </Card>
 
           {investmentPoints.length > 0 && (
-            <Card style={[styles.resultsCard, { backgroundColor: theme.card }]}>
-              <Text style={[styles.resultsTitle, { color: primary }]}>
-                <MaterialCommunityIcons name="thought-bubble" size={24} color={primary} style={{ marginRight: 8 }} />
-                Here's What I've Got:
-              </Text>
+            <Card style={[styles.resultCard, { backgroundColor: card }]}>
               {investmentPoints.map((point, index) => (
-                <View key={index} style={styles.listItem}>
-                  <Text style={[styles.bulletPoint, { color: primary }]}>✨</Text>
-                  <Text style={[styles.listItemText, { color: text }]}>
-                    {point.map((part, partIndex) => (
-                      <Text
-                        key={partIndex}
-                        style={{ fontWeight: part.bold ? 'bold' : 'normal', color: text }}
-                      >
+                <Text key={index} style={{ color: text, marginBottom: 8 }}>
+                  {'• '}
+                  {point.map((part, i) =>
+                    part.bold ? (
+                      <Text key={i} style={{ fontWeight: 'bold', color: text }}>
                         {part.text}
                       </Text>
-                    ))}
-                  </Text>
-                </View>
+                    ) : (
+                      <Text key={i}>{part.text}</Text>
+                    )
+                  )}
+                </Text>
               ))}
             </Card>
           )}
@@ -191,94 +170,34 @@ const Invest = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  flex: {
-    flex: 1,
-  },
-  scrollContainer: {
-    padding: 20,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    opacity: 0.7,
-    marginBottom: 20,
-  },
-  inputCard: {
-    padding: 20,
-    marginBottom: 20,
-    borderRadius: 12,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    fontWeight: '500',
-  },
+  safeArea: { flex: 1 },
+  flex: { flex: 1 },
+  scrollContainer: { padding: 16 },
+  header: { marginBottom: 24, alignItems: 'center' },
+  title: { fontSize: 24, fontWeight: 'bold' },
+  subtitle: { fontSize: 16, marginTop: 8 },
+  inputCard: { padding: 16, borderRadius: 12, marginBottom: 16 },
+  resultCard: { padding: 16, borderRadius: 12 },
+  label: { fontSize: 16, fontWeight: '600', marginBottom: 6 },
   input: {
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
-    fontSize: 16,
   },
   inputMultiline: {
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
-    fontSize: 16,
     minHeight: 80,
     textAlignVertical: 'top',
   },
   button: {
-    paddingVertical: 15,
+    padding: 14,
     borderRadius: 10,
     alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    elevation: 5,
-  },
-  resultsCard: {
-    padding: 20,
-    marginTop: 20,
-    borderRadius: 12,
-  },
-  resultsTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 10,
-  },
-  bulletPoint: {
-    marginRight: 10,
-    fontSize: 18,
-    lineHeight: 24,
-  },
-  listItemText: {
-    flexShrink: 1,
-    fontSize: 16,
-    lineHeight: 24,
+    marginTop: 10,
   },
 });
 
