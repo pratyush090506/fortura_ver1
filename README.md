@@ -127,6 +127,6 @@ A big thanks to the contributors who helped build Fortura:
 -   Kartikey - [@Kartikey060105](https://github.com/Kartikey060105)
 -   Pratyush Mohanty – [@pratyush090506](https://github.com/pratyush090506)
 -   Asmit Banik - [@asmitbanik](https://github.com/asmitbanik)
--   Jasleen Chabra- [@codejasleen](https://github.com/codejasleen)
+-   Jasleen Chhabra- [@codejasleen](https://github.com/codejasleen)
 
 ---
