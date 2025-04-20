@@ -104,45 +104,21 @@ Follow these steps to get Fortura up and running on your local machine for devel
 
 ## 📸 App Screenshots
 
-Take a visual tour of the Fortura app:
+- Take a visual tour of the Fortura app:
 
-<p align="center">
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <strong>Login</strong><br>
-    <img src="https://github.com/user-attachments/assets/4651f6a0-e5db-4fe7-a864-06d21aa3fde0" width="200" />
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <strong>Overview</strong><br>
-    <img src="https://github.com/user-attachments/assets/f00014c3-03bf-4969-a792-237166b44268" width="200" />
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <strong>Profile</strong><br>
-    <img src="https://github.com/user-attachments/assets/7b7aa580-de0a-4563-b902-7fc13715801d" width="200" />
-  </div>
-</p>
+| **Login** | **Overview** | **Profile** |
+| --- | --- | --- |
+| <img src="https://github.com/user-attachments/assets/4651f6a0-e5db-4fe7-a864-06d21aa3fde0" width="200" style="margin-right: 10px; margin-bottom: 10px;" /> | <img src="https://github.com/user-attachments/assets/f00014c3-03bf-4969-a792-237166b44268" width="200" style="margin-right: 10px; margin-bottom: 10px;" /> | <img src="https://github.com/user-attachments/assets/7b7aa580-de0a-4563-b902-7fc13715801d" width="200" style="margin-right: 10px; margin-bottom: 10px;" /> |
 
-<p align="center">
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <strong>AI Assistant</strong><br>
-    <img src="https://github.com/user-attachments/assets/e29bfd25-40cd-4fc2-a86f-ff1177ccbcaf" width="200" />
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <strong>Investment</strong><br>
-    <img src="https://github.com/user-attachments/assets/9cdd23de-198b-49e6-bad3-9523fb72ebc8" width="200" />
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <strong>Budget</strong><br>
-    <img src="https://github.com/user-attachments/assets/afb6f74b-e7cc-4f18-a065-aa21c38f87ea" width="200" />
-  </div>
-</p>
+| **AI Assistant** | **Investment Opportunity** | **Budget** |
+| --- | --- | --- |
+| <img src="https://github.com/user-attachments/assets/e29bfd25-40cd-4fc2-a86f-ff1177ccbcaf" width="200" style="margin-right: 10px; margin-bottom: 10px;" /> | <img src="https://github.com/user-attachments/assets/9cdd23de-198b-49e6-bad3-9523fb72ebc8" width="200" style="margin-right: 10px; margin-bottom: 10px;" /> | <img src="https://github.com/user-attachments/assets/afb6f74b-e7cc-4f18-a065-aa21c38f87ea" width="200" style="margin-right: 10px; margin-bottom: 10px;" /> |
 
-<p align="center">
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <strong>Insights</strong><br>
-    <img src="https://github.com/user-attachments/assets/890782fd-a4be-4edc-a977-eba270504fa6" width="200" />
-  </div>
-</p>
+| **Insights** |
+| --- |
+| <img src="https://github.com/user-attachments/assets/890782fd-a4be-4edc-a977-eba270504fa6" width="200" style="margin-bottom: 10px;" /> |
 
+---
 
 ## 🙌 Contributors
 
