@@ -8,7 +8,7 @@ Fortura is your smart, AI-powered companion for mastering personal finance. Trac
 
 You can download the latest Android APK directly from the following link:
 
--   [bit.ly/fortura-apk](bit.ly/fortura-apk)
+-   [bit.ly/fortura-apk](https://bit.ly/fortura-apk)
 
 ---
 
