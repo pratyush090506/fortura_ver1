@@ -5,20 +5,21 @@ import { useThemeColor } from '../../context/ThemeProvider';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { UserContext } from '../../context/UserContext';
 import {useTranslation} from 'react-i18next'
+import { AuthContext } from '../../context/AuthContext';
 
 const ProfileScreen = ({ navigation}) => {
   const {user} = useContext(UserContext);
   const {t} = useTranslation();
-
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const { text,primary,background,card } = useThemeColor();
+  const {logout} = useContext(AuthContext)
 
-  const handleMenuPress = (action) => {
+  const handleMenuPress = async (action) => {
     switch (action) {
       case 'logout':
-        setIsLoggedIn(false);
-        Alert.alert('Logged Out', 'You have been logged out.');
+        logout();
         navigation.navigate('Login');
+        Alert.alert('Logged Out', 'You have been logged out.');
         break;
       case 'login':
         navigation.navigate('Login');

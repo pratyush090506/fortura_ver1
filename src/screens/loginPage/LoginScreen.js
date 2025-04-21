@@ -14,27 +14,23 @@ import {
   Alert,
   Image, 
 } from 'react-native';
-
 import { getAuth, signInWithPhoneNumber } from '@react-native-firebase/auth';
 import { useThemeColor } from '../../context/ThemeProvider';
 import { UserContext } from '../../context/UserContext';
 import { useTranslation } from 'react-i18next';
-
-
 import Logo from '../../assets/fortura.png';
+import { AuthContext } from '../../context/AuthContext';
 
 const LoginScreen = ({ navigation }) => {
-  const auth = getAuth();
   const {t} = useTranslation();
-
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
   const { setUser } = useContext(UserContext);
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
-
   const colors = useThemeColor();
+  const {login} = useContext(AuthContext);
 
   const handleSendOTP = async () => {
     if (!name) {
@@ -64,9 +60,8 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await confirm.confirm(code);
-
-      setUser({ name: name, phone: phone });
-
+      setUser({name : name, phone: phone});
+      login();
       navigation.replace('Main', { name, phone });
     } catch (error) {
       console.log('❌ Invalid code:', error);

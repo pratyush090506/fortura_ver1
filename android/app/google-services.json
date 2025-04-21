@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "793828929609",
-    "project_id": "incubatorpro-926ba",
-    "storage_bucket": "incubatorpro-926ba.firebasestorage.app"
+    "project_number": "810533518528",
+    "project_id": "helpkartikey",
+    "storage_bucket": "helpkartikey.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:793828929609:android:8d7e0eab7eb88eddf00f98",
+        "mobilesdk_app_id": "1:810533518528:android:5a2825ee2683092a344125",
         "android_client_info": {
           "package_name": "com.forturanew"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC8HIhmjidXSZ1oJvLOje9Tbj0E5Dov1wM"
+          "current_key": "AIzaSyAmScmUK10dludHwegPB0BiLp0vZz6ZShs"
         }
       ],
       "services": {

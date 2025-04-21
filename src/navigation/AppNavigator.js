@@ -6,6 +6,8 @@ import AIAssistantScreen from '../screens/overviewPage/AIAssistant';
 import Invest from '../screens/overviewPage/Invest';
 import { LoginScreen,OverviewScreen,PayScreen,BudgetScreen,InsightsScreen,ProfileNavigator } from '../screens';
 import { useThemeColor } from '../context/ThemeProvider';
+import { useContext} from 'react';
+import { AuthContext, AuthProvider } from '../context/AuthContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,9 +82,13 @@ function TabNavigator() {
 }
 
 export default function AppNavigator() {
+  const { isLoggedIn } = useContext(AuthContext);
+
+  if (isLoggedIn === null) return null;
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName={isLoggedIn ? 'Main' : 'Login'}>
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
           <Stack.Screen name="AIAssistant" component={AIAssistantScreen} options={{ headerShown: false }} />

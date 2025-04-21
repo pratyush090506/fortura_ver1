@@ -4,7 +4,6 @@ import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-nat
 import { Card } from '../../components/Card';
 import { useThemeColor } from '../../context/ThemeProvider';
 import { useRoute } from '@react-navigation/native';
-import { GEMINI_API_KEY } from '@env';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
 
