@@ -19,16 +19,26 @@ import { Card } from '../../components/Card';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTranslation } from 'react-i18next';
 import { useThemeColor } from '../../context/ThemeProvider';
+<<<<<<< HEAD
 
 
 const Invest = () => {
   const {card , primary , text , background, secondary , border} = useThemeColor();
+=======
+
+const Invest = () => {
+  const { text, background, primary, warning, error, secondary, card, border } = useThemeColor();
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
   const { t } = useTranslation();
   const [age, setAge] = useState('');
   const [futurePlans, setFuturePlans] = useState('');
   const [income, setIncome] = useState('');
   const [loading, setLoading] = useState(false);
   const [investmentPoints, setInvestmentPoints] = useState([]);
+<<<<<<< HEAD
+=======
+  const navigation = useNavigation();
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
   const { language } = useLanguage();
 
   const handleGetInvestmentOptions = async () => {
@@ -88,15 +98,7 @@ const Invest = () => {
       const response = await axios.post(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
         {
-          contents: [
-            {
-              parts: [
-                {
-                  text: prompt,
-                },
-              ],
-            },
-          ],
+          contents: [{ parts: [{ text: prompt }] }],
         },
         {
           headers: {
@@ -130,8 +132,10 @@ const Invest = () => {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: background }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.flex}>
+        style={styles.flex}
+      >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
+<<<<<<< HEAD
           <View style={styles.header}>
             <Text style={[styles.title, { color: text , marginTop:25 }]}>
               <MaterialCommunityIcons name="arrow-top-right" size={28} color={primary} /> 
@@ -139,17 +143,34 @@ const Invest = () => {
             </Text>
             <Text style={[styles.subtitle, { color: text + '80', textAlign: 'center'}]}>
               Unleash the potential of your money with these insights.
+=======
+          <View style={[styles.header, { marginTop: 20 }]}> {/* Added marginTop here */}
+            <Text style={[styles.title, { color: text }]}>
+              <MaterialCommunityIcons name="arrow-top-right" size={28} color={primary} />{' '}
+              {t('investmentAnalysis')}
+            </Text>
+            <Text style={[styles.subtitle, { color: text + '80', textAlign: 'center' }]}>
+              {t('unleash')}
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
             </Text>
           </View>
 
           <Card style={[styles.inputCard, { backgroundColor: card }]}>
+<<<<<<< HEAD
             <Text style={[styles.label, { color: text }]}>{t('yourAge')}</Text>
+=======
+            <Text style={[styles.label, { color: text }]}>{t('yourage')}</Text>
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
             <TextInput
               style={[styles.input, { borderColor: border, color: text }]}
               value={age}
               onChangeText={setAge}
               keyboardType="number-pad"
+<<<<<<< HEAD
               placeholder="Enter your age (e.g., 25)"
+=======
+              placeholder={t('enterAge')}
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
               placeholderTextColor={secondary}
             />
 
@@ -158,7 +179,11 @@ const Invest = () => {
               style={[styles.inputMultiline, { borderColor: border, color: text }]}
               value={futurePlans}
               onChangeText={setFuturePlans}
+<<<<<<< HEAD
               placeholder="What are your big goals? (e.g., early retirement, dream home)"
+=======
+              placeholder={t('enterFuturePlans')}
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
               placeholderTextColor={secondary}
               multiline
             />
@@ -169,7 +194,11 @@ const Invest = () => {
               value={income}
               onChangeText={setIncome}
               keyboardType="number-pad"
+<<<<<<< HEAD
               placeholder="Your yearly earnings (e.g., 500000)"
+=======
+              placeholder={t('enterIncome')}
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
               placeholderTextColor={secondary}
             />
 
@@ -181,36 +210,46 @@ const Invest = () => {
               {loading ? (
                 <ActivityIndicator size="small" color={background} />
               ) : (
+<<<<<<< HEAD
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <MaterialCommunityIcons name="lightbulb-on" size={20} color={background} style={{ marginRight: 8 }} />
                   <Text style={{ color: background, fontSize: 18, fontWeight: 'bold' }}>
                     {t('analyze')}
                   </Text>
                 </View>
+=======
+                <Text style={{ color: background, fontSize: 18, fontWeight: 'bold' }}>
+                  <MaterialCommunityIcons name="lightbulb-on" size={20} color={background} />{' '}
+                  {t('analyseoptions')}
+                </Text>
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
               )}
             </TouchableOpacity>
           </Card>
 
           {investmentPoints.length > 0 && (
+<<<<<<< HEAD
             <Card style={[styles.resultsCard, { backgroundColor: card }]}>
               <Text style={[styles.resultsTitle, { color: primary }]}>
                 <MaterialCommunityIcons name="thought-bubble" size={24} color={primary} style={{ marginRight: 8 }} />
                 Here's What I've Got:
               </Text>
+=======
+            <Card style={[styles.resultCard, { backgroundColor: card }]}>
+>>>>>>> 37db262a6f1141cac741cd43e3491323f1cb846e
               {investmentPoints.map((point, index) => (
-                <View key={index} style={styles.listItem}>
-                  <Text style={[styles.bulletPoint, { color: primary }]}>✨</Text>
-                  <Text style={[styles.listItemText, { color: text }]}>
-                    {point.map((part, partIndex) => (
-                      <Text
-                        key={partIndex}
-                        style={{ fontWeight: part.bold ? 'bold' : 'normal', color: text }}
-                      >
+                <Text key={index} style={{ color: text, marginBottom: 8 }}>
+                  {'• '}
+                  {point.map((part, i) =>
+                    part.bold ? (
+                      <Text key={i} style={{ fontWeight: 'bold', color: text }}>
                         {part.text}
                       </Text>
-                    ))}
-                  </Text>
-                </View>
+                    ) : (
+                      <Text key={i}>{part.text}</Text>
+                    )
+                  )}
+                </Text>
               ))}
             </Card>
           )}
@@ -221,94 +260,34 @@ const Invest = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  flex: {
-    flex: 1,
-  },
-  scrollContainer: {
-    padding: 20,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    opacity: 0.7,
-    marginBottom: 20,
-  },
-  inputCard: {
-    padding: 20,
-    marginBottom: 20,
-    borderRadius: 12,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    fontWeight: '500',
-  },
+  safeArea: { flex: 1 },
+  flex: { flex: 1 },
+  scrollContainer: { padding: 16 },
+  header: { marginBottom: 24, alignItems: 'center' },
+  title: { fontSize: 24, fontWeight: 'bold' },
+  subtitle: { fontSize: 16, marginTop: 8 },
+  inputCard: { padding: 16, borderRadius: 12, marginBottom: 16 },
+  resultCard: { padding: 16, borderRadius: 12 },
+  label: { fontSize: 16, fontWeight: '600', marginBottom: 6 },
   input: {
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
-    fontSize: 16,
   },
   inputMultiline: {
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
-    fontSize: 16,
     minHeight: 80,
     textAlignVertical: 'top',
   },
   button: {
-    paddingVertical: 15,
+    padding: 14,
     borderRadius: 10,
     alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    elevation: 5,
-  },
-  resultsCard: {
-    padding: 20,
-    marginTop: 20,
-    borderRadius: 12,
-  },
-  resultsTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 10,
-  },
-  bulletPoint: {
-    marginRight: 10,
-    fontSize: 18,
-    lineHeight: 24,
-  },
-  listItemText: {
-    flexShrink: 1,
-    fontSize: 16,
-    lineHeight: 24,
+    marginTop: 10,
   },
 });
 

@@ -4,15 +4,18 @@ import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-nat
 import { Card } from '../../components/Card';
 import { useThemeColor } from '../../context/ThemeProvider';
 import { useRoute } from '@react-navigation/native';
-
-const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+import { GEMINI_API_KEY } from '@env';
+import { useLanguage } from '../../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
+
+const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 export default function InsightsScreen() {
   const { t } = useTranslation();
   const { text, background, primary, success, warning, error, secondary } = useThemeColor();
   const route = useRoute();
   const { budgetData } = route.params || { budgetData: null };
+  const { language } = useLanguage();
 
   const [financialScore, setFinancialScore] = useState(null);
   const [spendingAnalysis, setSpendingAnalysis] = useState(null);
@@ -24,7 +27,7 @@ export default function InsightsScreen() {
     if (budgetData) {
       processBudgetWithGemini(budgetData);
     } else {
-      setErrorMsg('No budget data available. Please edit your budget first.');
+      setErrorMsg(t('noBudgetError'));
     }
   }, [budgetData]);
 
@@ -35,7 +38,7 @@ export default function InsightsScreen() {
     setSpendingAnalysis(null);
     setRecommendations([]);
 
-    const prompt = `Critically analyze the following budget data and provide your response in two parts, separated by '***RECOMMENDATIONS***':
+    const prompt = `Critically analyze the following budget data and provide your response in two parts, separated by '***RECOMMENDATIONS*** ':
 
 Part 1: Financial Score and Spending Analysis as a JSON object with the following keys:
 {
@@ -48,7 +51,7 @@ Part 1: Financial Score and Spending Analysis as a JSON object with the followin
 
 ***RECOMMENDATIONS***
 
-Part 2: Actionable recommendations as a plain text list. Wrap important words or actions with double asterisks (e.g., **Reduce spending**) Just give 3 to 4 interesting, precise and actionable recommendations.
+Part 2: Actionable recommendations as a plain text list. Wrap important words or actions with double asterisks (e.g., **Reduce spending**) Just give 3 to 4 interesting, precise and actionable recommendations give the response in ${language}.
 
 Budget Data:
 Total Budget: ₹${data.total}
@@ -81,14 +84,14 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
       const outputText = responseData?.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (!outputText) {
-        setErrorMsg('No valid response from Gemini.');
+        setErrorMsg(t('invalidResponse'));
         return;
       }
 
       const [jsonPartRaw, recommendationsPart] = outputText.split('***RECOMMENDATIONS***');
 
       if (!jsonPartRaw || !recommendationsPart) {
-        setErrorMsg('Invalid Gemini response format.');
+        setErrorMsg(t('invalidResponseFormat'));
         return;
       }
 
@@ -115,11 +118,11 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
         setRecommendations(recList);
       } catch (parseError) {
         console.error('JSON Parse Error:', parseError);
-        setErrorMsg('Failed to parse financial data from Gemini.');
+        setErrorMsg(t('parseError'));
       }
     } catch (err) {
       console.error('API Request Failed:', err);
-      setErrorMsg('Failed to communicate with Gemini.');
+      setErrorMsg(t('apiError'));
     } finally {
       setLoading(false);
     }
@@ -136,7 +139,7 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
   };
 
   const renderFormattedText = (text) => {
-    const parts = text.split(/(\*\*[^*]+\*\*)/g); 
+    const parts = text.split(/(\*\*[^*]+\*\*)/g);
     return parts.map((part, index) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         return (
@@ -160,7 +163,7 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
       {loading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={primary} />
-          <Text style={[styles.loadingText, { color: text }]}>Fetching Insights...</Text>
+          <Text style={[styles.loadingText, { color: text }]}>{t('fetchingInsights')}</Text>
         </View>
       )}
 
@@ -169,7 +172,7 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
       {!loading && financialScore !== null && spendingAnalysis && recommendations.length > 0 ? (
         <>
           <Card style={styles.scoreCard}>
-            <Text style={[styles.scoreLabel , {color: text}]}>Financial Health Score</Text>
+            <Text style={[styles.scoreLabel, { color: text }]}>{t('financialHealthScore')}</Text>
             <Text
               style={[
                 styles.scoreValue,
@@ -181,7 +184,7 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
             >
               {financialScore}
             </Text>
-            <Text style={[styles.scoreTrend , {color: text}]}>Based on AI analysis</Text>
+            <Text style={[styles.scoreTrend, { color: text }]}>{t('basedonaiAnalysis')}</Text>
           </Card>
 
           <View style={styles.section}>
@@ -191,7 +194,7 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
                 <View key={label} style={styles.spendingItem}>
                   <View style={styles.spendingHeader}>
                     <Text style={[styles.spendingLabel, { color: text }]}>
-                      {label.replace(/\*\*/g, '')}
+                      {t(label.replace(/\*\*/g, '').trim())}
                     </Text>
                     <Text style={[styles.spendingValue, { color: getColorForCategory(label) }]}>
                       {value.percentage}%
@@ -222,14 +225,16 @@ ${data.categories.map(cat => `- ${cat.name}: Budgeted ₹${cat.budgeted}, Spent 
                     💡 {t('recommendation')} {idx + 1}
                   </Text>
                 </View>
-                <Text style={[styles.recommendationText , {color: text}]}>{renderFormattedText(rec)}</Text>
+                <Text style={[styles.recommendationText, { color: text }]}>
+                  {renderFormattedText(rec)}
+                </Text>
               </Card>
             ))}
           </View>
         </>
       ) : !loading && !errorMsg ? (
         <Card style={styles.infoCard}>
-          <Text style={styles.infoText}>No insights available.</Text>
+          <Text style={styles.infoText}>{t('noInsights')}</Text>
         </Card>
       ) : null}
     </ScrollView>

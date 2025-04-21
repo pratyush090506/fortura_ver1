@@ -88,7 +88,7 @@ const LoginScreen = ({ navigation }) => {
           style={styles.container}
         >
           <View style={styles.flexGrow}>
-            {/* Logo Container */}
+           
             <View style={styles.logoContainer}>
               <Image source={Logo} style={styles.logo} resizeMode="contain" />
             </View>
@@ -100,22 +100,22 @@ const LoginScreen = ({ navigation }) => {
 
             {!confirm ? (
               <>
-                <Text style={[styles.label, { color: colors.text }]}>{t('Enter Name:')}</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t('entername')}</Text>
                 <TextInput
                   style={[styles.input, { borderColor: colors.border, color: colors.text }]}
                   value={name}
                   onChangeText={setName}
-                  placeholder="Enter your name"
+                  placeholder={t('entername')}
                   placeholderTextColor={colors.secondary}
                 />
 
-                <Text style={[styles.label, { color: colors.text }]}>{t('Enter Phone Number:')}</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t('enterphone')}</Text>
                 <TextInput
                   style={[styles.input, { borderColor: colors.border, color: colors.text }]}
                   value={phone}
                   onChangeText={setPhone}
                   keyboardType="phone-pad"
-                  placeholder="Enter phone number"
+                  placeholder={t('enterphone')}
                   placeholderTextColor={colors.secondary}
                 />
                 
@@ -126,7 +126,7 @@ const LoginScreen = ({ navigation }) => {
                   {loading ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
-                    <Text style={styles.buttonText}>{t('Send OTP')}</Text>
+                    <Text style={styles.buttonText}>{t('sendOTP')}</Text>
                   )}
                 </Pressable>
               </>
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 150, 
-    height: 150,
+    height: 150, 
   },
   sheet: {
     width: '100%',

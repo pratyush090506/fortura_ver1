@@ -99,6 +99,26 @@
     "Other": "Other",
 
     "aiass" : "AI Assistant",
-    "analyze": "Analyze"
+    "analyze": "Analyze",
+    "yourage": "Your Age",
+
+    "enterAge": "Enter your age (e.g., 25)",
+    "enterFuturePlans": "Enter your future plans (e.g., Buy a new car)",
+    "enterIncome": "Enter your annual income (e.g., 50,000)",
+    "unleash": "Unleash your potential of your money",
+    "ask": "Ask me anything about Finance",
+    "askbanner": "💬 Ask me anything about your budget, savings, or finances!",
+    "basedonaiAnalysis": "Based on AI analysis",
+    "fa": "Your Personal Finance Assistant",
+    "entertainment": "Entertainment",
+    "utilities": "Utilities",
+    "budgetLabel": "Budget",
+    "spentLabel": "Spent",
+    "remainingLabel": "Remaining",
+    "april": "April",
+    "entername": "Enter your name",
+    "enterphone": "Enter your phone number",
+    "sendOTP": "Send OTP"
+
   }
   

@@ -15,6 +15,8 @@ import {
 } from 'react-native';
 import { useThemeColor } from '../../context/ThemeProvider';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTranslation } from 'react-i18next';
+import Icon from 'react-native-vector-icons/Feather';
 
 const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
@@ -25,6 +27,7 @@ const AIAssistantScreen = () => {
   const scrollViewRef = useRef(null);
   const { text, background, primary } = useThemeColor();
   const { language } = useLanguage();
+  const { t } = useTranslation();
 
   // Auto scroll on message change
   useEffect(() => {
@@ -132,7 +135,7 @@ const AIAssistantScreen = () => {
         style={styles.flex}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Fortura AI</Text>
-          <Text style={styles.subHeader}>Your Personal Finance Assistant</Text>
+          <Text style={styles.subHeader}>{t('fa')}</Text>
         </View>
 
         <ScrollView
@@ -144,7 +147,7 @@ const AIAssistantScreen = () => {
           {messages.length === 0 && !loading && (
             <View style={styles.placeholderContainer}>
               <Text style={styles.placeholderText}>
-                💬 Ask me anything about budgeting, saving, or finance!
+                {t('askbanner')}
               </Text>
             </View>
           )}
@@ -179,7 +182,7 @@ const AIAssistantScreen = () => {
           <TextInput
             style={styles.input}
             value={query}
-            placeholder="Ask me something..."
+            placeholder={t('ask')}
             placeholderTextColor="#ccc"
             onChangeText={setQuery}
             multiline
@@ -187,7 +190,8 @@ const AIAssistantScreen = () => {
           <TouchableOpacity
             onPress={handleAskGemini}
             style={[styles.sendButton, { backgroundColor: primary }]}>
-            <Text style={styles.sendText}>Send</Text>
+
+            <Icon name="send" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
