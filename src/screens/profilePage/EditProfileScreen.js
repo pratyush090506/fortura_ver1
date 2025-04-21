@@ -37,6 +37,7 @@ export default function EditProfileScreen() {
 
   const handleNameBlur = async () => {
     setUser({...user, name:name})
+    await AsyncStorage.setItem('name' , name)
   };
 
   const handleEmailBlur = async () => {

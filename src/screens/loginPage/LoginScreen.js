@@ -20,6 +20,7 @@ import { UserContext } from '../../context/UserContext';
 import { useTranslation } from 'react-i18next';
 import Logo from '../../assets/fortura.png';
 import { AuthContext } from '../../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }) => {
   const {t} = useTranslation();
@@ -60,6 +61,8 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await confirm.confirm(code);
+      await AsyncStorage.setItem('name' , name);
+      await AsyncStorage.setItem('phone' , phone);
       setUser({name : name, phone: phone});
       login();
       navigation.replace('Main', { name, phone });
