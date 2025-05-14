@@ -12,24 +12,34 @@ import { AuthContext, AuthProvider } from '../context/AuthContext';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const OverviewIcon = ({ color, size}) => (
-  <MaterialCommunityIcons name="view-dashboard" size={size} color={color} />
+const OverviewIcon = ({ color, size , focused}) => (
+  <MaterialCommunityIcons 
+  name={focused ? "view-dashboard" : "view-dashboard-outline"}
+  size={size} color={color} />
 );
 
-const BudgetIcon = ({ color, size }) => (
-  <MaterialCommunityIcons name="wallet" size={size} color={color} />
+const BudgetIcon = ({ color, size, focused }) => (
+  <MaterialCommunityIcons 
+  name={focused ? "wallet" : "wallet-outline"}  
+  size={size} color={color} />
 );
 
 const PayIcon = ({ color, size }) => (
-  <MaterialCommunityIcons name="qrcode-scan" size={size} color={color} />
+  <MaterialCommunityIcons 
+  name="qrcode-scan" 
+  size={size} color={color} />
 );
 
 const InsightsIcon = ({ color, size }) => (
-  <MaterialCommunityIcons name="chart-line" size={size} color={color} />
+  <MaterialCommunityIcons 
+  name="chart-line" 
+  size={size} color={color} />
 );
 
-const ProfileIcon = ({ color, size }) => (
-  <MaterialCommunityIcons name="account" size={size} color={color} />
+const ProfileIcon = ({ color, size , focused}) => (
+  <MaterialCommunityIcons 
+  name={focused ? "account" : "account-outline"} 
+  size={size} color={color} />
 );
 
 function TabNavigator() {
@@ -39,8 +49,8 @@ function TabNavigator() {
     <Tab.Navigator
       initialRouteName="Overview"
       screenOptions={{
-        tabBarActiveTintColor: primary,
-        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.6)',
+        tabBarActiveTintColor: 'white',
+        tabBarInactiveTintColor: 'rgba(190, 184, 184, 0.75)',
         tabBarStyle: {
           borderTopWidth: 0,
           elevation: 0,
